@@ -17,18 +17,18 @@ module.exports = {
           '^/bdmsUserApi': ''
         }
       },
-      '/bdmsMenuApi': {
+      '/bdmsRoleApi': {
         target: 'http://0.0.0.0:5003', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
-          '^/bdmsMenuApi': ''
+          '^/bdmsRoleApi': ''
         }
       },
-      '/bdmsRoleApi': {
+      '/bdmsMenuApi': {
         target: 'http://0.0.0.0:5004', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
-          '^/bdmsRoleApi': ''
+          '^/bdmsMenuApi': ''
         }
       },
       '/userApi': {

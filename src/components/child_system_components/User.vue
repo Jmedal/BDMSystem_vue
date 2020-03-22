@@ -10,7 +10,7 @@
       <!-- 搜索和添加区域 -->
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入用户名"
+          <el-input placeholder="请输入用户帐号"
                     v-model="queryInfo.query"
                     @keyup.enter.native="handleSearchClick"
                     clearable
@@ -25,10 +25,14 @@
       <!-- 用户列表区域 -->
       <el-table :data="userList.users" border stripe>
         <el-table-column type="index" label="#"></el-table-column>
-        <el-table-column prop="username" label="姓名"></el-table-column>
+        <el-table-column prop="account" label="用户帐号"></el-table-column>
+        <el-table-column prop="name" label="姓名" ></el-table-column>
+        <el-table-column prop="role_name" label="角色"></el-table-column>
+        <el-table-column prop="birthday" label="生日" ></el-table-column>
+        <el-table-column prop="sex" label="性別" ></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="mobile" label="电话"></el-table-column>
-        <el-table-column prop="role_name" label="角色"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间" ></el-table-column>
         <el-table-column prop="mg_state" label="状态">
           <template v-slot="scope">
             <el-switch v-model="scope.row.mg_state" @change="userStateChanged(scope.row)">

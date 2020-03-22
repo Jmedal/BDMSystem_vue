@@ -15,6 +15,7 @@
       </el-row>
       <!-- 菜单列表区域 -->
       <el-table :data="page.pageList" border stripe>
+        <el-table-column type="index" label="#" width="30px"></el-table-column>
         <el-table-column prop="id" label="菜单id" width="80px"></el-table-column>
         <el-table-column prop="pid" label="父级id" width="80px"></el-table-column>
         <el-table-column prop="num" label="序号" width="80px"></el-table-column>
@@ -204,11 +205,11 @@
       //验证添加表单序号并转换类型
       let checkAddNum = (rule, value, callback) => {
         const regPath = /^[0-9]+$/
-        if (regPath.test(value)) {
+        if (regPath.test(value) && Number(value) > 0) {
           this.addForm.num = Number(value)
           return callback()
         }
-        callback(new Error('输入序号应为数字'))
+        callback(new Error('序号应为正整数'))
       }
       //验证编辑表单父级菜单
       let checkPid = (rule, value, callback) => {
@@ -220,11 +221,11 @@
       //验证编辑表单序号并转换类型
       let checkEditNum = (rule, value, callback) => {
         const regPath = /^[0-9]+$/
-        if (regPath.test(value)) {
+        if (regPath.test(value) && Number(value) > 0) {
           this.editForm.num = Number(value)
           return callback()
         }
-        callback(new Error('输入序号应为数字'))
+        callback(new Error('序号应为正整数'))
       }
 
       return {
@@ -327,8 +328,8 @@
               this.menuList = res.data.data.menuList
             }
             this.page.total = this.menuList.length
-            let maxPageNum = Math.ceil(this.page.total/this.page.pageSize)
-            this.page.pageNum =  this.page.pageNum <= maxPageNum ? this.page.pageNum : maxPageNum
+            let maxPageNum = Math.ceil(this.page.total / this.page.pageSize)
+            this.page.pageNum = this.page.pageNum <= maxPageNum ? this.page.pageNum : maxPageNum
             this.handleCurrentChange(this.page.pageNum)
           } else {
             this.$message.error('获取菜单列表失败！')
@@ -348,6 +349,7 @@
 
       showAddDialog () {
         this.levelsOptions = this.defaultLevelsOptions
+        this.parentIdOptions = []
         this.addDialogVisible = true
       },
 
@@ -372,7 +374,7 @@
 
       showEditDialog (menuInfo) {
         let minLevels = this.getMenuChildrenList(menuInfo)
-        this.levelsOptions = this.defaultLevelsOptions.slice(0, menuInfo.levels + 3 - minLevels)
+        this.levelsOptions = this.defaultLevelsOptions.slice(0, menuInfo.levels + this.defaultLevelsOptions.length - minLevels)
         this.editForm = JSON.parse(JSON.stringify(menuInfo))
         this.editDialogVisible = true
       },
@@ -394,16 +396,6 @@
               this.$message.error('修改菜单失败！')
             }
           })
-        })
-      },
-
-      getMenuOptions (minLevels) {
-        this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetMenuOptions`, {minLevels: minLevels}
-        ).then(res => {
-          if (res.data.code === 0) {
-            this.cascaderId = ++this.cascaderId % 2
-            this.parentIdOptions = res.data.data.menusOptions
-          }
         })
       },
 
@@ -431,6 +423,19 @@
           })
         }).catch(() => {
           this.$message.info('已取消删除')
+        })
+      },
+
+      getMenuOptions (minLevels) {
+        this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetMenuOptions`, {minLevels: minLevels}
+        ).then(res => {
+          if (res.data.code === 0) {
+            this.cascaderId = ++this.cascaderId % 2
+            if (minLevels !== 1) {
+              res.data.data.menuOptions = res.data.data.menuOptions[0].children
+            }
+            this.parentIdOptions = res.data.data.menuOptions
+          }
         })
       },
 
@@ -475,28 +480,3 @@
     float: left;
   }
 </style>
-
-
-// //递归获取菜单树
-// getMenuTreeOptions (opt, maxLevels) {
-//   this.menuList.forEach(v => {
-//     if (v.levels < maxLevels && v.pid === opt.value) {
-//       let option = {
-//         value: v.id,
-//         label: v.menuName + '(id:' + v.id + ')',
-//         children: []
-//       }
-//       opt.children.push(option)
-//       this.getMenuTreeOptions(option, maxLevels)
-//     }
-//   })
-// },
-//
-// removeMenuLeafChildren (node) {
-//   if (node.children.length === 0) {
-//     node.children = null
-//     return
-//   }
-//   node.children.forEach(item =>
-//     this.removeMenuLeafChildren(item))
-// },

@@ -326,8 +326,8 @@
 
       //标签删除
       handleClose (tag) {
-        var tagIndex = this.tags.indexOf(tag)
-        var courseIdIndex = this.selectValue.courseId.indexOf(this.tags[tagIndex].id)
+        let tagIndex = this.tags.indexOf(tag)
+        let courseIdIndex = this.selectValue.courseId.indexOf(this.tags[tagIndex].id)
         this.selectValue.courseId.splice(courseIdIndex, 1)
         this.tags.splice(tagIndex, 1)
       },
