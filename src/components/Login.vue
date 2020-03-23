@@ -1,8 +1,8 @@
 <template>
-  <div class="login_container">
+  <div :style="backgroundDiv" class="login_container">
     <div class="login_box">
       <div class="avatar_box">
-        <img src="../assets/logo.png">
+        <img src="../assets/img/bdmsLogo.jpg">
       </div>
       <el-form ref="userRef" :model="user" :rules="loginUserRules" label-width="0px" class="login_form">
         <el-form-item prop="account">
@@ -43,14 +43,19 @@
               {required: true, message: '请输入密码', trigger: 'blur'},
               {min: 4, max: 12, message: '密码长度在 3 到 12 个字符', trigger: 'blur'}
             ]
+        },
+        backgroundDiv: {
+          backgroundImage:'url(' + require('../assets/img/background3.gif') + ')',
+          backgroundRepeat:'no-repeat',
+          backgroundSize:'100% 100%'
         }
       }
     }, created () {
       this.init()
     },
     methods: {
-      init(){
-        this.user.save = window.localStorage.getItem('save') === null ?  '2' : window.localStorage.getItem('save')
+      init () {
+        this.user.save = window.localStorage.getItem('save') === null ? '2' : window.localStorage.getItem('save')
       },
 
       login () {
@@ -60,7 +65,7 @@
             if (res.data.code === 0 && res.data.data.result === 'success') {
               this.$notify({
                 title: '登录成功',
-                message: res.data.data.userInfo.name + ', Welcome to BDMSystem!',
+                message: res.data.data.userInfo.name + '， Welcome to BDMSystem!',
                 type: 'success'
               })
               //登录获取token令牌；
@@ -101,9 +106,9 @@
 
 <style lang="less" scoped>
   .login_container {
-    background-color: #2b4b6b;
     height: 100%;
   }
+
 
   .login_box {
     width: 450px;
@@ -117,8 +122,8 @@
   }
 
   .avatar_box {
-    height: 130px;
-    width: 130px;
+    height: 135px;
+    width: 135px;
     border: 1px solid #eee;
     border-radius: 50%;
     padding: 10px;

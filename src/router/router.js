@@ -148,13 +148,18 @@ router.beforeEach((to, from, next) => {
     return next('/login')
   }
   let path = window.localStorage.getItem('save') === '1' ? window.localStorage.getItem('path') : window.sessionStorage.getItem('path')
-  if(path){
+  if (path) {
     path = JSON.parse(Base64.decode(path))
     if (!path[to.path]) {
       return next('/404')
     }
+    return next()
+  } else {
+    if(to.path === '/index/house' || to.path === '/')
+      return next()
+    else
+      return next('/404')
   }
-  return next()
 })
 
 export default router
