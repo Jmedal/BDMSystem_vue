@@ -11,21 +11,21 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/bdmsAccountApi': {
-        target: 'http://0.0.0.0:5002', //这里面是你要访问的IP地址
+        target: 'http://47.107.116.160:5002', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/bdmsAccountApi': ''
         }
       },
       '/bdmsRoleApi': {
-        target: 'http://0.0.0.0:5003', //这里面是你要访问的IP地址
+        target: 'http://47.107.116.160:5003', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/bdmsRoleApi': ''
         }
       },
       '/bdmsMenuApi': {
-        target: 'http://0.0.0.0:5004', //这里面是你要访问的IP地址
+        target: 'http://47.107.116.160:5004', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/bdmsMenuApi': ''
