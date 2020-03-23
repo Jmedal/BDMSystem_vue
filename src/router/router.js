@@ -14,10 +14,11 @@ import Company_Profession from '@/components/child_work_components/company_profe
 import Company_Contest from '@/components/child_work_components/company_contest'
 import Pholcus from '@/components/child_work_components/pholcus'
 import Home from '@/components/home'
-import Application from '@/components/application'
-import Config from '@/components/config'
 import Index from '@/components/index'
 import Login from '@/components/Login'
+import PageNoFound from '@/components/404NoFound'
+import Application from '@/components/application'
+import Config from '@/components/config'
 
 Vue.use(Router)
 
@@ -106,7 +107,7 @@ const router = new Router({
           path: 'home',
           name: 'home',
           component: Home
-        },{
+        }, {
           path: 'application',
           name: 'application',
           component: Application
@@ -118,26 +119,40 @@ const router = new Router({
         },
       ]
     },
+    {
+      path: '/404',
+      name: 'PageNoFound',
+      component: PageNoFound
+    },
   ]
 })
 
 //挂载路由导航守卫
 router.beforeEach((to, from, next) => {
-  const localTokenStr = window.localStorage.getItem('access_token')
-  const sessionTokenStr = window.sessionStorage.getItem('access_token')
+  if (to.path === '/404') {
+    return next()
+  }
+  let tokenStr = window.localStorage.getItem('save') === '1' ? window.localStorage.getItem('access_token') : window.sessionStorage.getItem('access_token')
   //进入登陆页面，需要检查是否已经登录
-  if (to.path === '/login'){
-    if(!localTokenStr && !sessionTokenStr)
+  if (to.path === '/login') {
+    if (!tokenStr) {
       return next()
-    else{
+    } else {
       Vue.prototype.$message.info('您已登录系统！')
       return next('/index/house')
     }
   }
   //对localStorage和sessionStorage同时进行读取token检查
-  if (!localTokenStr && !sessionTokenStr) {
+  if (!tokenStr) {
     Vue.prototype.$message.warning('您还未登录系统，请登录帐号！')
     return next('/login')
+  }
+  let path = window.localStorage.getItem('save') === '1' ? window.localStorage.getItem('path') : window.sessionStorage.getItem('path')
+  if(path){
+    path = JSON.parse(Base64.decode(path))
+    if (!path[to.path]) {
+      return next('/404')
+    }
   }
   return next()
 })

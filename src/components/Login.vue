@@ -16,7 +16,7 @@
           <el-button type="info" @click="resetUser">重置</el-button>
         </el-form-item>
         <el-form-item class="check">
-          <el-checkbox v-model="user.save" true-label="1" false-label="0">记住密码</el-checkbox>
+          <el-checkbox v-model="user.save" true-label="1" false-label="2">记住密码</el-checkbox>
         </el-form-item>
       </el-form>
     </div>
@@ -31,7 +31,7 @@
         user: {
           account: '',
           password: '',
-          save: '0',
+          save: '',
         },
         loginUserRules: {
           account: [
@@ -45,32 +45,41 @@
             ]
         }
       }
+    }, created () {
+      this.init()
     },
     methods: {
+      init(){
+        this.user.save = window.localStorage.getItem('save') === null ?  '2' : window.localStorage.getItem('save')
+      },
+
       login () {
         this.$refs.userRef.validate(async valid => {
           if (!valid) return
           this.$axios.post(`/bdmsAccountApi/service.v1.Account/Login`, this.user).then(res => {
-            if (res.data.data.result === 'success') {
+            if (res.data.code === 0 && res.data.data.result === 'success') {
               this.$notify({
                 title: '登录成功',
-                message: 'Welcome to BDMSystem!',
+                message: res.data.data.userInfo.name + ', Welcome to BDMSystem!',
                 type: 'success'
               })
               //登录获取token令牌；
               //记住密码可以持久化储存，不记住密码就存到sessionStorage；
-              if (this.user.save === "1") {
+              if (this.user.save === '1') {
                 window.localStorage.setItem('access_token', res.data.data.access_token)
                 window.localStorage.setItem('randomKey', res.data.data.randomKey)
+                window.localStorage.setItem('userInfo', Base64.encode(JSON.stringify(res.data.data.userInfo)))
               } else {
                 window.sessionStorage.setItem('access_token', res.data.data.access_token)
                 window.sessionStorage.setItem('randomKey', res.data.data.randomKey)
+                window.sessionStorage.setItem('userInfo', Base64.encode(JSON.stringify(res.data.data.userInfo)))
               }
+              window.localStorage.setItem('save', this.user.save)
               this.$router.push({path: '/index/house'})
             } else {
               this.$notify({
                 title: '登录失败',
-                message: '登录验证失败',
+                message: '登录验证失败\n错误信息:' + res.data.data.result,
                 type: 'warning'
               })
             }
@@ -82,6 +91,7 @@
           })
         })
       },
+
       resetUser () {
         this.$refs.userRef.resetFields()
       }
