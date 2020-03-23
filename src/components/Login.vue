@@ -50,7 +50,7 @@
       login () {
         this.$refs.userRef.validate(async valid => {
           if (!valid) return
-          this.$axios.post(`/bdmsUserApi/service.v1.Account/Login`, this.user).then(res => {
+          this.$axios.post(`/bdmsAccountApi/service.v1.Account/Login`, this.user).then(res => {
             if (res.data.data.result === 'success') {
               this.$notify({
                 title: '登录成功',

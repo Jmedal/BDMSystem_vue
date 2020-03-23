@@ -381,6 +381,7 @@
 
       editDialogClosed () {
         this.$refs.editFormRef.resetFields()
+        this.editForm = {}
       },
 
       editMenu () {

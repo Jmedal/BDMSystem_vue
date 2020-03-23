@@ -10,11 +10,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/bdmsUserApi': {
+      '/bdmsAccountApi': {
         target: 'http://0.0.0.0:5002', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
-          '^/bdmsUserApi': ''
+          '^/bdmsAccountApi': ''
         }
       },
       '/bdmsRoleApi': {
