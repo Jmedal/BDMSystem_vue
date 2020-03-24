@@ -83,8 +83,8 @@
               this.$router.push({path: '/index/house'})
             } else {
               this.$notify({
-                title: '登录失败',
-                message: '登录验证失败， 错误信息:' + res.data.data.result,
+                title: '登录验证失败',
+                message: '失败原因：' + res.data.data.result,
                 type: 'warning'
               })
             }

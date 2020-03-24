@@ -156,7 +156,6 @@
                :default-checked-keys="defaultKeys"
                ref="treeRef"
                default-expand-all
-               :check-strictly="check"
                show-checkbox></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setMenuDialogVisible = false">取 消</el-button>
@@ -253,7 +252,6 @@
           label: 'label',
           children: 'children',
         },
-        check: true,
       }
     }, created () {
       this.init()
@@ -361,7 +359,6 @@
       },
 
       showSetMenuDialog (role) {
-        //this.check = true
         this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetAllMenuOptions`
         ).then(res => {
           if (res.data.code === 0) {
