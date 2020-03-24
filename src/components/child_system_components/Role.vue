@@ -10,7 +10,12 @@
       <!-- 添加区域 -->
       <el-row :gutter="20">
         <el-col :span="4">
-          <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true">添加角色</el-button>
+          <el-button type="primary"
+                     :icon="rightMap[menuObject.add] === undefined ? 'el-icon-circle-close' : rightMap[menuObject.add].icon "
+                     @click="addDialogVisible = true"
+                     :disabled="rightMap[menuObject.add] === undefined">
+            {{rightMap[menuObject.add] === undefined ? '按钮禁用' : rightMap[menuObject.add].menuName}}
+          </el-button>
         </el-col>
       </el-row>
       <!-- 菜单列表区域 -->
@@ -20,7 +25,8 @@
             <el-row :class="['menu-bottom',i===0 ? 'menu-top':'','center']" v-for="(item, i) in scope.row.children"
                     :key="item.id">
               <el-col :span="5">
-                <el-tag @close="removeMenuById(scope.row,item.id)" closable>
+                <el-tag @close="removeMenuById(scope.row,item.id)"
+                        :closable="rightMap[menuObject.deleteRoleMenu] !== undefined">
                   {{item.menuName}}
                 </el-tag>
                 <i class="el-icon-caret-right"></i>
@@ -29,14 +35,16 @@
                 <el-row :class="[i1===0 ? '':'menu-top','center']" v-for="(item1, i1) in item.children" :key="item1.id">
                   <el-col :span="6">
                     <el-tag type="success"
-                            @close="removeMenuById(scope.row,item1.id)" closable>
+                            @close="removeMenuById(scope.row,item1.id)"
+                            :closable="rightMap[menuObject.deleteRoleMenu] !== undefined">
                       {{item1.menuName}}
                     </el-tag>
                   </el-col>
                   <el-col :span="18">
                     <el-tag type="warning" v-for="item2 in item1.children"
                             :key="item2.id"
-                            @close="removeMenuById(scope.row,item2.id)" closable>
+                            @close="removeMenuById(scope.row,item2.id)"
+                            :closable="rightMap[menuObject.deleteRoleMenu] !== undefined">
                       {{item2.menuName}}
                     </el-tag>
                   </el-col>
@@ -49,12 +57,28 @@
         <el-table-column prop="id" label="角色id" width="80px"></el-table-column>
         <el-table-column prop="roleName" label="角色名称"></el-table-column>
         <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
-        <el-table-column label="操作" width="300px">
+        <el-table-column label="操作" width="350px">
           <template v-slot="scope">
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeRoleById(scope.row.id)">删除
+            <el-button type="primary"
+                       :icon="rightMap[menuObject.edit] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.edit].icon"
+                       size="mini"
+                       @click="showEditDialog(scope.row)"
+                       :disabled="rightMap[menuObject.edit] === undefined">
+              {{rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName}}
             </el-button>
-            <el-button type="warning" icon="el-icon-setting" size="mini" @click="showSetMenuDialog(scope.row)">分配权限
+            <el-button type="danger"
+                       :icon="rightMap[menuObject.delete] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.delete].icon"
+                       size="mini"
+                       @click="removeRoleById(scope.row.id)"
+                       :disabled="rightMap[menuObject.delete] === undefined">
+              {{rightMap[menuObject.delete] === undefined ? '禁用' : rightMap[menuObject.delete].menuName}}
+            </el-button>
+            <el-button type="warning"
+                       :icon="rightMap[menuObject.setRoleMenu] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.setRoleMenu].icon"
+                       size="mini"
+                       @click="showSetMenuDialog(scope.row)"
+                       :disabled="rightMap[menuObject.setRoleMenu] === undefined">
+              {{rightMap[menuObject.setRoleMenu] === undefined ? '禁用' : rightMap[menuObject.setRoleMenu].menuName}}
             </el-button>
           </template>
         </el-table-column>
@@ -132,6 +156,7 @@
                :default-checked-keys="defaultKeys"
                ref="treeRef"
                default-expand-all
+               :check-strictly="check"
                show-checkbox></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setMenuDialogVisible = false">取 消</el-button>
@@ -140,7 +165,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
   export default {
     name: 'sys_role',
@@ -164,6 +188,16 @@
         callback(new Error('序号应为正整数'))
       }
       return {
+        //权限配置
+        menuObject: {
+          add: 23,
+          edit: 24,
+          delete: 25,
+          setRoleMenu: 26,
+          deleteRoleMenu: 27,
+        },
+        rightMap: {},
+        //
         roleList: [],
         page: {
           pageList: [],
@@ -219,10 +253,19 @@
           label: 'label',
           children: 'children',
         },
+        check: true,
       }
     }, created () {
+      this.init()
       this.getRoleList()
     }, methods: {
+      init () {
+        let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
+        if (list === null) return
+        list.forEach(item => {
+          this.rightMap [item.id] = item
+        })
+      },
       getRoleList () {
         this.$axios.post(`/bdmsRoleApi/service.v1.Role/GetRoleList`).then(res => {
           if (res.data.code === 0) {
@@ -318,6 +361,7 @@
       },
 
       showSetMenuDialog (role) {
+        //this.check = true
         this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetAllMenuOptions`
         ).then(res => {
           if (res.data.code === 0) {
@@ -379,10 +423,10 @@
         })
       },
 
-      removeMenu(node, menuId, parent){
-        if(!node.roleName && node.id === menuId){
+      removeMenu (node, menuId, parent) {
+        if (!node.roleName && node.id === menuId) {
           let index = parent.children.indexOf(node)
-          parent.children.splice(index,1);
+          parent.children.splice(index, 1)
         }
         if (!node.children) return
         node.children.forEach(item =>

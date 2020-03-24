@@ -19,7 +19,7 @@ axios.interceptors.request.use(config => {
       'Authorization': token,
       'Content-Type': 'application/json'
     }
-  }else{
+  } else {
     config.headers = {
       'Content-Type': 'application/json'
     }
@@ -42,8 +42,9 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
   if (response.data.code === -403 || response.data.code === -401) {
     // 删除已经失效或过期的token
-    window.localStorage.clear()
-    window.sessionStorage.clear()
+    let save = window.localStorage.getItem('save')
+    save === '1' ? window.localStorage.clear() : window.sessionStorage.clear()
+    window.localStorage.setItem('save', save)
     //提示
     Vue.prototype.$message.warning('您的登录信息已失效，请重新登录系统！')
     // 到登录页重新获取token
@@ -52,7 +53,6 @@ axios.interceptors.response.use(response => {
   return response
 
 }, function (error) {
-
   return Promise.reject(error)
 })
 

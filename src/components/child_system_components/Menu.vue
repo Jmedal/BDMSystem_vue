@@ -10,7 +10,12 @@
       <!-- 添加区域 -->
       <el-row :gutter="20">
         <el-col :span="4">
-          <el-button type="primary" icon="el-icon-folder-add" @click="showAddDialog">添加菜单</el-button>
+          <el-button type="primary"
+                     :icon="rightMap[menuObject.add] === undefined ? 'el-icon-circle-close' : rightMap[menuObject.add].icon "
+                     @click="showAddDialog"
+                     :disabled="rightMap[menuObject.add] === undefined">
+            {{rightMap[menuObject.add] === undefined ? '按钮禁用' : rightMap[menuObject.add].menuName}}
+          </el-button>
         </el-col>
       </el-row>
       <!-- 菜单列表区域 -->
@@ -36,12 +41,25 @@
         </el-table-column>
         <el-table-column label="操作" width="150px">
           <template v-slot="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top" :enterable="false">
-              <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)"></el-button>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-button type="primary"
+                         :icon="rightMap[menuObject.edit] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.edit].icon"
+                         size="mini"
+                         @click="showEditDialog(scope.row)"
+                         :disabled="rightMap[menuObject.edit] === undefined"></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-              <el-button type="danger" icon="el-icon-folder-delete" size="mini"
-                         @click="removeMenuById(scope.row)"></el-button>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.delete] === undefined ? '禁用' : rightMap[menuObject.delete].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-button type="danger"
+                         :icon="rightMap[menuObject.delete] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.delete].icon"
+                         size="mini"
+                         @click="removeMenuById(scope.row)"
+                         :disabled="rightMap[menuObject.delete] === undefined"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -229,6 +247,14 @@
       }
 
       return {
+        //权限配置
+        menuObject: {
+          add: 29,
+          edit: 30,
+          delete: 31,
+        },
+        rightMap: {},
+        //
         menuList: [],
         page: {
           pageList: [],
@@ -318,9 +344,17 @@
       }
     },
     created () {
+      this.init()
       this.getMenuList()
     },
     methods: {
+      init () {
+        let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
+        if (list === null) return
+        list.forEach(item => {
+          this.rightMap [item.id] = item
+        })
+      },
       getMenuList () {
         this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetMenuList`).then(res => {
           if (res.data.code === 0) {

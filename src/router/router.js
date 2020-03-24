@@ -23,6 +23,8 @@ import Config from '@/components/config'
 Vue.use(Router)
 
 const router = new Router({
+  mode: 'history',
+
   routes: [
     {
       path: '/',
@@ -155,10 +157,11 @@ router.beforeEach((to, from, next) => {
     }
     return next()
   } else {
-    if(to.path === '/index/house' || to.path === '/')
+    if (to.path === '/index/house' || to.path === '/') {
       return next()
-    else
+    } else {
       return next('/404')
+    }
   }
 })
 

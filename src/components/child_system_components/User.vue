@@ -19,7 +19,12 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true">添加用户</el-button>
+          <el-button type="primary"
+                     :icon="rightMap[menuObject.add] === undefined ? 'el-icon-circle-close' : rightMap[menuObject.add].icon "
+                     @click="addDialogVisible = true"
+                     :disabled="rightMap[menuObject.add] === undefined">
+            {{rightMap[menuObject.add] === undefined ? '按钮禁用' : rightMap[menuObject.add].menuName}}
+          </el-button>
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
@@ -45,24 +50,43 @@
             {{scope.row.createTime | timeFilter('YYYY-mm-dd')}}
           </template>
         </el-table-column>
-        <el-table-column prop="state" label="状态" width="150px">
+        <el-table-column prop="state" label="状态" width="120px">
           <template v-slot="scope">
             <el-switch v-model="scope.row.status === 1" @change="userStateChanged(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200px">
+        <el-table-column label="操作" width="230px">
           <template v-slot="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top" :enterable="false">
-              <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)"></el-button>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-button type="primary"
+                         :icon="rightMap[menuObject.edit] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.edit].icon"
+                         size="mini"
+                         @click="showEditDialog(scope.row)"
+                         :disabled="rightMap[menuObject.edit] === undefined"></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top" :enterable="false">
-              <el-button type="danger" icon="el-icon-delete" size="mini"
-                         @click="removeUserById(scope.row.id)"></el-button>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.delete] === undefined ? '禁用' : rightMap[menuObject.delete].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-button type="danger"
+                         :icon="rightMap[menuObject.delete] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.delete].icon"
+                         size="mini"
+                         @click="removeUserById(scope.row.id)"
+                         :disabled="rightMap[menuObject.delete] === undefined"></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"
-                         @click="showRoleDialog(scope.row)"></el-button>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.setRole] === undefined ? '禁用' : rightMap[menuObject.setRole].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-button type="warning"
+                         :icon="rightMap[menuObject.setRole] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.setRole].icon"
+                         size="mini"
+                         @click="showRoleDialog(scope.row)"
+                         :disabled="rightMap[menuObject.setRole] === undefined"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -289,6 +313,15 @@
         callback(new Error('请输入合法的手机号码'))
       }
       return {
+        //权限配置
+        menuObject: {
+          add: 18,
+          edit: 19,
+          delete: 20,
+          setRole: 21,
+        },
+        rightMap: {},
+        //
         queryInfo: {
           query: '',
           pageNum: 1,
@@ -396,6 +429,11 @@
             this.roleMap [0] = '待分配'
             this.getUserList()
           }
+        })
+        let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
+        if (list === null) return
+        list.forEach(item => {
+          this.rightMap [item.id] = item
         })
       },
 

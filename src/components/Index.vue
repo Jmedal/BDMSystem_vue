@@ -25,7 +25,8 @@
                    :collapse-transition="false"
                    :collapse="!isCollapse">
             <template v-for="item in menus">
-              <el-menu-item :index="item.path" :key="item.id" v-if="item.children === null">
+              <el-menu-item :index="item.path" :key="item.id" @click="setChildren(item.children)"
+                            v-if="item.children === null">
                 <i :class="item.icon"></i>
                 <span>{{item.menuName}}</span>
               </el-menu-item>
@@ -34,7 +35,8 @@
                   <i :class="item.icon"></i>
                   <span>{{item.menuName}}</span>
                 </template>
-                <el-menu-item :index=" subItem.path" v-for="subItem in item.children" :key="subItem.id">
+                <el-menu-item :index=" subItem.path" v-for="subItem in item.children" :key="subItem.id"
+                              @click="setChildren(subItem.children)">
                   <template slot="title">
                     <i :class="subItem.icon"></i>
                     <span>{{subItem.menuName}}</span>
@@ -105,6 +107,10 @@
         node.children.forEach(item =>
           this.getPathList(item, path))
       },
+
+      setChildren (children) {
+        window.sessionStorage.setItem('children', Base64.encode(JSON.stringify(children)))
+      }
     },
     computed: {
       isFold () {
@@ -142,6 +148,7 @@
 
   .el-aside {
     background-color: #333744;
+    overflow: inherit;
 
     .el-menu {
       border-right: none;
@@ -169,5 +176,3 @@
     cursor: pointer;
   }
 </style>
-
-

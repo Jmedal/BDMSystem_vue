@@ -84,7 +84,7 @@
             } else {
               this.$notify({
                 title: '登录失败',
-                message: '登录验证失败\n错误信息:' + res.data.data.result,
+                message: '登录验证失败， 错误信息:' + res.data.data.result,
                 type: 'warning'
               })
             }
