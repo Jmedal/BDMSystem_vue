@@ -252,6 +252,9 @@
           label: 'label',
           children: 'children',
         },
+        //
+        menuOptionsData: [],
+        menuLeafData: [],
       }
     }, created () {
       this.init()
@@ -263,6 +266,16 @@
         list.forEach(item => {
           this.rightMap [item.id] = item
         })
+        this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetAllMenuOptions`).then(res => {
+          if (res.data.code === 0) {
+            this.menuOptionsData = res.data.data.menuOptions[0].children
+            this.menuOptionsData.forEach(item =>
+              this.getAllLeafKey(item, this.menuLeafData))
+          } else {
+            this.$message.error('获取权限数据失败！')
+          }
+        })
+
       },
       getRoleList () {
         this.$axios.post(`/bdmsRoleApi/service.v1.Role/GetRoleList`).then(res => {
@@ -359,17 +372,11 @@
       },
 
       showSetMenuDialog (role) {
-        this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetAllMenuOptions`
-        ).then(res => {
-          if (res.data.code === 0) {
-            this.menuOptions = res.data.data.menuOptions[0].children
-            this.roleId = role.id
-            this.getLeafKey(role, this.defaultKeys)
-            this.setMenuDialogVisible = true
-          } else {
-            this.$message.error('获取权限数据失败！')
-          }
-        })
+        this.menuOptions = JSON.parse(JSON.stringify(this.menuOptionsData))
+        this.roleId = role.id
+        this.getLeafKey(role, this.defaultKeys)
+        this.defaultKeys = this.defaultKeys.filter(v => this.menuLeafData.includes(v))
+        this.setMenuDialogVisible = true
       },
 
       setMenuDialogClosed () {
@@ -395,7 +402,7 @@
 
       removeMenuById (role, menuId) {
         this.$confirm(
-          '此操作将移除角色的该权限(包括子权限), 是否继续?',
+          '此操作将移除角色该权限(包括子权限), 是否继续?',
           '提示',
           {
             confirmButtonText: '确定',
@@ -430,13 +437,20 @@
           this.removeMenu(item, menuId, node))
       },
 
-      //递归获取三级id
       getLeafKey (node, arr) {
         if (!node.children && !node.roleName) {
           return arr.push(node.id)
         } else if (!node.children) return
         node.children.forEach(item =>
           this.getLeafKey(item, arr))
+      },
+
+      getAllLeafKey (node, arr) {
+        if (!node.children) {
+          return arr.push(node.value)
+        }
+        node.children.forEach(item =>
+          this.getAllLeafKey(item, arr))
       },
     }
   }
