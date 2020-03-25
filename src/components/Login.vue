@@ -2,7 +2,7 @@
   <div :style="backgroundDiv" class="login_container">
     <div class="login_box">
       <div class="avatar_box">
-        <img src="../assets/img/bdmsLogo.jpg">
+        <img src="../assets/img/logo2.jpg">
       </div>
       <el-form ref="userRef" :model="user" :rules="loginUserRules" label-width="0px" class="login_form">
         <el-form-item prop="account">
