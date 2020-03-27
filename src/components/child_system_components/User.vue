@@ -322,7 +322,7 @@
         //权限配置
         menuObject: {
           add: 18,
-          switch: 75,
+          switch: 74,
           edit: 19,
           delete: 20,
           setRole: 21,
