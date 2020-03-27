@@ -232,9 +232,9 @@
       return {
         //权限配置
         menuObject: {
-          add: 72,
-          edit: 73,
-          delete: 74,
+          add: 71,
+          edit: 72,
+          delete: 73,
         },
         rightMap: {},
         //加载分页
