@@ -59,18 +59,28 @@
         <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
         <el-table-column label="操作" width="260px">
           <template v-slot="scope">
-            <el-button type="primary"
-                       :icon="rightMap[menuObject.edit] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.edit].icon"
-                       size="mini"
-                       @click="showEditDialog(scope.row)"
-                       :disabled="rightMap[menuObject.edit] === undefined">
-            </el-button>
-            <el-button type="danger"
-                       :icon="rightMap[menuObject.delete] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.delete].icon"
-                       size="mini"
-                       @click="removeRoleById(scope.row.id)"
-                       :disabled="rightMap[menuObject.delete] === undefined">
-            </el-button>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-button type="primary"
+                         :icon="rightMap[menuObject.edit] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.edit].icon"
+                         size="mini"
+                         @click="showEditDialog(scope.row)"
+                         :disabled="rightMap[menuObject.edit] === undefined">
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.delete] === undefined ? '禁用' : rightMap[menuObject.delete].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-button type="danger"
+                         :icon="rightMap[menuObject.delete] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.delete].icon"
+                         size="mini"
+                         @click="removeRoleById(scope.row.id)"
+                         :disabled="rightMap[menuObject.delete] === undefined">
+              </el-button>
+            </el-tooltip>
             <el-button type="warning"
                        :icon="rightMap[menuObject.setRoleMenu] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.setRoleMenu].icon"
                        size="mini"
