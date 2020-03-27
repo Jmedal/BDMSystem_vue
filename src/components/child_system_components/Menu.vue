@@ -2,8 +2,8 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>管理员权限</el-breadcrumb-item>
-      <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
+      <el-breadcrumb-item>{{grandpa}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{parent}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-card>
@@ -19,8 +19,8 @@
         </el-col>
       </el-row>
       <!-- 菜单列表区域 -->
-      <el-table :data="page.pageList" border stripe>
-        <el-table-column type="index" label="#" width="30px"></el-table-column>
+      <el-table :data="page.pageList" v-loading="loading" border stripe>
+        <el-table-column type="index" label="#" width="40px"></el-table-column>
         <el-table-column prop="id" label="菜单id" width="80px"></el-table-column>
         <el-table-column prop="pid" label="父级id" width="80px"></el-table-column>
         <el-table-column prop="num" label="序号" width="80px"></el-table-column>
@@ -77,7 +77,7 @@
     </el-card>
 
     <el-dialog
-      title="添加菜单"
+      :title="rightMap[menuObject.add].menuName"
       :visible.sync="addDialogVisible"
       width="700px"
       @close="addDialogClosed">
@@ -142,7 +142,7 @@
     </el-dialog>
 
     <el-dialog
-      title="编辑菜单"
+      :title="rightMap[menuObject.edit].menuName"
       :visible.sync="editDialogVisible"
       width="700px"
       @close="editDialogClosed">
@@ -248,6 +248,8 @@
 
       return {
         //权限配置
+        grandpa: '',
+        parent: '',
         menuObject: {
           add: 29,
           edit: 30,
@@ -262,6 +264,7 @@
           pageSize: 8,
           total: 0,
         },
+        loading: true,
         //添加菜单
         addDialogVisible: false,
         addForm: {
@@ -349,6 +352,8 @@
     },
     methods: {
       init () {
+        this.grandpa = JSON.parse(Base64.decode(window.sessionStorage.getItem('grandpa')))
+        this.parent = JSON.parse(Base64.decode(window.sessionStorage.getItem('parent')))
         let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
         if (list === null) return
         list.forEach(item => {
@@ -356,6 +361,7 @@
         })
       },
       getMenuList () {
+        this.loading = true
         this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetMenuList`).then(res => {
           if (res.data.code === 0) {
             if (res.data.data.menuList !== undefined && res.data.data.menuList !== null) {
@@ -365,6 +371,7 @@
             let maxPageNum = Math.ceil(this.page.total / this.page.pageSize)
             this.page.pageNum = this.page.pageNum <= maxPageNum ? this.page.pageNum : maxPageNum
             this.handleCurrentChange(this.page.pageNum)
+            this.loading = false
           } else {
             this.$message.error('获取菜单列表失败！')
           }
@@ -396,11 +403,11 @@
           if (!volid) return
           this.$axios.post(`/bdmsMenuApi/service.v1.Menu/AddMenu`, this.addForm).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('添加菜单成功')
+              this.$message.success(this.rightMap[this.menuObject.add].menuName + '成功')
               this.getMenuList()
               this.addDialogVisible = false
             } else {
-              this.$message.error('添加菜单失败！')
+              this.$message.error(this.rightMap[this.menuObject.add].menuName + '失败！')
             }
           })
         })
@@ -424,11 +431,11 @@
           this.editForm.childrenId = this.childrenId
           this.$axios.post(`/bdmsMenuApi/service.v1.Menu/UpdateMenu`, this.editForm).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('修改菜单成功')
+              this.$message.success(this.rightMap[this.menuObject.edit].menuName + '成功')
               this.getMenuList()
               this.editDialogVisible = false
             } else {
-              this.$message.error('修改菜单失败！')
+              this.$message.error(this.rightMap[this.menuObject.edit].menuName + '失败！')
             }
           })
         })
@@ -436,7 +443,7 @@
 
       removeMenuById (menuInfo) {
         this.$confirm(
-          '此操作将永久删除该菜单(包括子菜单), 是否继续?',
+          '此操作将无法撤回, 是否继续?',
           '提示',
           {
             confirmButtonText: '确定',
@@ -450,14 +457,14 @@
             childrenId: this.childrenId
           }).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('删除成功')
+              this.$message.success(this.rightMap[this.menuObject.delete].menuName + '成功')
               this.getMenuList()
             } else {
-              this.$message.error('删除失败！')
+              this.$message.error(this.rightMap[this.menuObject.delete].menuName + '失败！')
             }
           })
         }).catch(() => {
-          this.$message.info('已取消删除')
+          this.$message.info('已取消' + this.rightMap[this.menuObject.delete].menuName)
         })
       },
 

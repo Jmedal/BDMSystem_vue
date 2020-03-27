@@ -1,5 +1,5 @@
 <template>
-  <div class="NoFound_container">
+  <div class="NoFound_container" :style="NoFound_container">
     <div class="head404"></div>
     <div class="txtbg404">
       <div class="txtbox">
@@ -16,7 +16,11 @@
   export default {
     name: 'PageNoFound',
     data () {
-      return {}
+      return {
+        NoFound_container:{
+          height: document.documentElement.clientHeight + 'px'
+        }
+      }
     },
     methods: {
     }
@@ -26,7 +30,6 @@
 <style lang="less" scoped>
   .NoFound_container {
     background-color: #494949;
-    height: 100%;
   }
 
   .head404 {

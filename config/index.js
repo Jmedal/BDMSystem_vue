@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/bdmsAccountApi': {
-        target: 'http://47.107.116.160:5002', //这里面是你要访问的IP地址
+        target: 'http://0.0.0.0:5002', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/bdmsAccountApi': ''
@@ -29,6 +29,13 @@ module.exports = {
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/bdmsMenuApi': ''
+        }
+      },
+      '/bdmsMessageApi': {
+        target: 'http://0.0.0.0:5005', //这里面是你要访问的IP地址
+        changeOrigin: true,     //开启代理
+        pathRewrite: {
+          '^/bdmsMessageApi': ''
         }
       },
       '/userApi': {

@@ -3,11 +3,11 @@
 html,
 body,
 #app {
-  height: 100%;
+  height: auto;
   margin: 0;
   padding: 0;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
-  min-width: 1366px;
+  min-width: 1466px;
 }
 
 .iconfont{

@@ -2,8 +2,8 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>管理员权限</el-breadcrumb-item>
-      <el-breadcrumb-item>角色管理</el-breadcrumb-item>
+      <el-breadcrumb-item>{{grandpa}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{parent}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-card>
@@ -19,7 +19,7 @@
         </el-col>
       </el-row>
       <!-- 菜单列表区域 -->
-      <el-table :data="page.pageList" border stripe>
+      <el-table :data="page.pageList" v-loading="loading" border stripe>
         <el-table-column type="expand">
           <template v-slot="scope">
             <el-row :class="['menu-bottom',i===0 ? 'menu-top':'','center']" v-for="(item, i) in scope.row.children"
@@ -53,25 +53,23 @@
             </el-row>
           </template>
         </el-table-column>
-        <el-table-column prop="num" label="#" width="30px"></el-table-column>
+        <el-table-column prop="num" label="#" width="40px"></el-table-column>
         <el-table-column prop="id" label="角色id" width="80px"></el-table-column>
-        <el-table-column prop="roleName" label="角色名称"></el-table-column>
+        <el-table-column prop="roleName" label="角色名称" width="200px"></el-table-column>
         <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
-        <el-table-column label="操作" width="350px">
+        <el-table-column label="操作" width="260px">
           <template v-slot="scope">
             <el-button type="primary"
                        :icon="rightMap[menuObject.edit] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.edit].icon"
                        size="mini"
                        @click="showEditDialog(scope.row)"
                        :disabled="rightMap[menuObject.edit] === undefined">
-              {{rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName}}
             </el-button>
             <el-button type="danger"
                        :icon="rightMap[menuObject.delete] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.delete].icon"
                        size="mini"
                        @click="removeRoleById(scope.row.id)"
                        :disabled="rightMap[menuObject.delete] === undefined">
-              {{rightMap[menuObject.delete] === undefined ? '禁用' : rightMap[menuObject.delete].menuName}}
             </el-button>
             <el-button type="warning"
                        :icon="rightMap[menuObject.setRoleMenu] === undefined ? 'el-icon-circle-close' :rightMap[menuObject.setRoleMenu].icon"
@@ -96,7 +94,7 @@
     </el-card>
 
     <el-dialog
-      title="添加角色"
+      :title="rightMap[menuObject.add].menuName"
       :visible.sync="addDialogVisible"
       width="550px"
       @close="addDialogClosed">
@@ -121,7 +119,7 @@
     </el-dialog>
 
     <el-dialog
-      title="编辑角色"
+      :title="rightMap[menuObject.edit].menuName"
       :visible.sync="editDialogVisible"
       width="550px"
       @close="editDialogClosed">
@@ -146,7 +144,7 @@
     </el-dialog>
 
     <el-dialog
-      title="分配权限"
+      :title="rightMap[menuObject.setRoleMenu].menuName"
       :visible.sync="setMenuDialogVisible"
       width="45%"
       @close="setMenuDialogClosed">
@@ -204,6 +202,7 @@
           pageSize: 8,
           total: 0,
         },
+        loading: true,
         //添加角色
         addDialogVisible: false,
         addForm: {
@@ -261,6 +260,8 @@
       this.getRoleList()
     }, methods: {
       init () {
+        this.grandpa = JSON.parse(Base64.decode(window.sessionStorage.getItem('grandpa')))
+        this.parent = JSON.parse(Base64.decode(window.sessionStorage.getItem('parent')))
         let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
         if (list === null) return
         list.forEach(item => {
@@ -278,6 +279,7 @@
 
       },
       getRoleList () {
+        this.loading = true
         this.$axios.post(`/bdmsRoleApi/service.v1.Role/GetRoleList`).then(res => {
           if (res.data.code === 0) {
             if (res.data.data.roleList !== undefined && res.data.data.roleList !== null) {
@@ -287,6 +289,7 @@
             let maxPageNum = Math.ceil(this.page.total / this.page.pageSize)
             this.page.pageNum = this.page.pageNum <= maxPageNum ? this.page.pageNum : maxPageNum
             this.handleCurrentChange(this.page.pageNum)
+            this.loading = false
           } else {
             this.$message.error('获取角色列表失败！')
           }
@@ -312,11 +315,11 @@
           if (!volid) return
           this.$axios.post(`/bdmsRoleApi/service.v1.Role/AddRole`, this.addForm).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('添加角色成功')
+              this.$message.success(this.rightMap[this.menuObject.add].menuName + '成功')
               this.getRoleList()
               this.addDialogVisible = false
             } else {
-              this.$message.error('添加角色失败！')
+              this.$message.error(this.rightMap[this.menuObject.add].menuName + '失败！')
             }
           })
         })
@@ -338,11 +341,11 @@
           this.editForm.childrenId = this.childrenId
           this.$axios.post(`/bdmsRoleApi/service.v1.Role/UpdateRole`, this.editForm).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('修改角色成功')
+              this.$message.success(this.rightMap[this.menuObject.edit].menuName + '成功')
               this.getRoleList()
               this.editDialogVisible = false
             } else {
-              this.$message.error('修改角色失败！')
+              this.$message.error(this.rightMap[this.menuObject.edit].menuName + '失败！')
             }
           })
         })
@@ -350,7 +353,7 @@
 
       removeRoleById (id) {
         this.$confirm(
-          '此操作将永久删除该角色, 是否继续?',
+          '此操作将无法撤回, 是否继续?',
           '提示',
           {
             confirmButtonText: '确定',
@@ -360,14 +363,14 @@
         ).then(() => {
           this.$axios.post(`/bdmsRoleApi/service.v1.Role/DeleteRole`, {id: id}).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('删除成功')
+              this.$message.success(this.rightMap[this.menuObject.delete].menuName + '成功')
               this.getRoleList()
             } else {
-              this.$message.error('删除失败！')
+              this.$message.error(this.rightMap[this.menuObject.delete].menuName + '失败！')
             }
           })
         }).catch(() => {
-          this.$message.info('已取消删除')
+          this.$message.info('已取消' + this.rightMap[this.menuObject.delete].menuName)
         })
       },
 
@@ -391,18 +394,18 @@
             menusId: keys
           }).then(res => {
           if (res.data.code === 0 && res.data.data.result === 'success') {
-            this.$message.success('分配权限成功')
+            this.$message.success(this.rightMap[this.menuObject.setRoleMenu].menuName + '成功')
             this.getRoleList()
             this.setMenuDialogVisible = false
           } else {
-            this.$message.error('分配权限失败！')
+            this.$message.error(this.rightMap[this.menuObject.setRoleMenu].menuName + '失败！')
           }
         })
       },
 
       removeMenuById (role, menuId) {
         this.$confirm(
-          '此操作将移除角色该权限(包括子权限), 是否继续?',
+          '此操作将无法撤回, 是否继续?',
           '提示',
           {
             confirmButtonText: '确定',
@@ -416,14 +419,14 @@
               menuId: menuId
             }).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('移除成功')
+              this.$message.success(this.rightMap[this.menuObject.deleteRoleMenu].menuName + '成功')
               this.removeMenu(role, menuId, null)
             } else {
-              this.$message.error('移除失败！')
+              this.$message.error(this.rightMap[this.menuObject.deleteRoleMenu].menuName + '失败！')
             }
           })
         }).catch(() => {
-          this.$message.info('已取消移除')
+          this.$message.info('已取消' + this.rightMap[this.menuObject.deleteRoleMenu].menuName)
         })
       },
 

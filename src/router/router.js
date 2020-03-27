@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Login from '@/components/Login'
+import Index from '@/components/index'
 import House from '@/components/house'
 import User from '@/components/child_system_components/user'
 import Menu from '@/components/child_system_components/menu'
 import Role from '@/components/child_system_components/role'
+import Message from '@/components/child_system_components/message'
+import PageNoFound from '@/components/404NoFound'
 import User_Type from '@/components/child_work_components/user_type'
 import Course_Activity from '@/components/child_work_components/course_activity'
 import Course_Study from '@/components/child_work_components/course_study'
@@ -14,9 +18,6 @@ import Company_Profession from '@/components/child_work_components/company_profe
 import Company_Contest from '@/components/child_work_components/company_contest'
 import Pholcus from '@/components/child_work_components/pholcus'
 import Home from '@/components/home'
-import Index from '@/components/index'
-import Login from '@/components/Login'
-import PageNoFound from '@/components/404NoFound'
 import Application from '@/components/application'
 import Config from '@/components/config'
 
@@ -59,6 +60,11 @@ const router = new Router({
           path: 'role',
           name: 'role',
           component: Role
+        },
+        {
+          path: 'message',
+          name: 'message',
+          component: Message
         },
         {
           path: 'user_type',

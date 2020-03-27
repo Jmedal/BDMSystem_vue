@@ -2,8 +2,8 @@
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>管理员权限</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>{{grandpa}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{parent}}</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图区域 -->
     <el-card>
@@ -28,8 +28,8 @@
         </el-col>
       </el-row>
       <!-- 用户列表区域 -->
-      <el-table :data="userPage.page" border stripe>
-        <el-table-column type="index" label="#" width="30px"></el-table-column>
+      <el-table :data="userPage.page" v-loading="loading" border stripe>
+        <el-table-column type="index" label="#" width="40px"></el-table-column>
         <el-table-column prop="account" label="用户名"></el-table-column>
         <el-table-column prop="name" label="姓名" width="100px"></el-table-column>
         <el-table-column prop="roleId" label="角色" width="130px">
@@ -52,11 +52,17 @@
         </el-table-column>
         <el-table-column prop="state" label="状态" width="120px">
           <template v-slot="scope">
-            <el-switch v-model="scope.row.status === 1" @change="userStateChanged(scope.row)">
-            </el-switch>
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.switch] === undefined ? '禁用' : rightMap[menuObject.switch].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-switch v-model="scope.row.status === 1" @change="userStateChanged(scope.row)"
+                         :disabled="rightMap[menuObject.switch] === undefined">
+              </el-switch>
+            </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="230px">
+        <el-table-column label="操作" width="200px">
           <template v-slot="scope">
             <el-tooltip class="item" effect="dark"
                         :content="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
@@ -104,7 +110,7 @@
     </el-card>
 
     <el-dialog
-      title="添加用户"
+      :title="rightMap[menuObject.add].menuName"
       :visible.sync="addDialogVisible"
       width="700px"
       @close="addDialogClosed">
@@ -179,7 +185,7 @@
     </el-dialog>
 
     <el-dialog
-      title="修改用户"
+      :title="rightMap[menuObject.edit].menuName"
       :visible.sync="editDialogVisible"
       width="700px"
       @close="editDialogClosed">
@@ -254,12 +260,12 @@
     </el-dialog>
 
     <el-dialog
-      title="分配权限"
+      :title="rightMap[menuObject.setRole].menuName"
       :visible.sync="setRoleDialogVisible"
       width="500px"
       @close="setRoleDialogClosed">
       <div>
-        <p style="text-align:left; margin-left: 26px" >用户名：{{userInfo.account}} </p>
+        <p style="text-align:left; margin-left: 26px">用户名：{{userInfo.account}} </p>
         <p style="text-align:left; margin-left: 40px">姓名：{{userInfo.name}} </p>
         <p style="text-align:left; margin-top: 20px;">当前的角色： {{userInfo.roleId | roleFilter(roleMap)}}</p>
         <p style="text-align:left;">请分配角色:
@@ -286,7 +292,7 @@
   export default {
     name: 'sys_user',
     data () {
-      //验证邮箱的规则
+      //验证帐号的规则
       let checkAccount = (rule, value, callback) => {
         this.$axios.post(`/bdmsAccountApi/service.v1.Account/CheckAccount`, {account: value,}).then(res => {
           if (res.data.code === 0 && res.data.data.result === 'success') {
@@ -316,6 +322,7 @@
         //权限配置
         menuObject: {
           add: 18,
+          switch: 75,
           edit: 19,
           delete: 20,
           setRole: 21,
@@ -333,6 +340,7 @@
           page: [],
           total: 0,
         },
+        loading: true,
         //添加用户框
         addDialogVisible: false,
         addForm: {
@@ -430,6 +438,8 @@
             this.getUserList()
           }
         })
+        this.grandpa = JSON.parse(Base64.decode(window.sessionStorage.getItem('grandpa')))
+        this.parent = JSON.parse(Base64.decode(window.sessionStorage.getItem('parent')))
         let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
         if (list === null) return
         list.forEach(item => {
@@ -438,9 +448,11 @@
       },
 
       getUserList () {
+        this.loading = true
         this.$axios.post(`/bdmsAccountApi/service.v1.Account/GetUserPage`, this.queryInfo).then(res => {
           if (res.data.code === 0) {
             this.userPage = res.data.data
+            this.loading = false
           } else {
             this.$message.error('获取用户列表失败！')
           }
@@ -462,22 +474,6 @@
         this.getUserList()
       },
 
-      userStateChanged (userInfo) {
-        userInfo.status = userInfo.status === 1 ? 2 : 1
-        this.$axios.post(`/bdmsAccountApi/service.v1.Account/SetUserStatus`,
-          {
-            id: userInfo.id,
-            status: userInfo.status
-          }).then(res => {
-          if (res.data.code === 0 && res.data.data.result === 'success') {
-            this.$message.success('更新用户状态成功')
-          } else {
-            userInfo.status = userInfo.status === 1 ? 2 : 1
-            this.$message.error('更新用户状态失败')
-          }
-        })
-      },
-
       addDialogClosed () {
         this.$refs.addFormRef.resetFields()
       },
@@ -488,13 +484,30 @@
           this.addForm.birthday = Number(this.addForm.birthday / 1000)
           this.$axios.post(`/bdmsAccountApi/service.v1.Account/AddUser`, {user: this.addForm}).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('添加用户成功')
+              this.$message.success(this.rightMap[this.menuObject.add].menuName + '成功')
               this.getUserList()
               this.addDialogVisible = false
             } else {
-              this.$message.error('添加用户失败！')
+              this.$message.error(this.rightMap[this.menuObject.add].menuName + '失败！')
+              this.addForm.birthday = Number(this.addForm.birthday * 1000)
             }
           })
+        })
+      },
+
+      userStateChanged (userInfo) {
+        userInfo.status = userInfo.status === 1 ? 2 : 1
+        this.$axios.post(`/bdmsAccountApi/service.v1.Account/SetUserStatus`,
+          {
+            id: userInfo.id,
+            status: userInfo.status
+          }).then(res => {
+          if (res.data.code === 0 && res.data.data.result === 'success') {
+            this.$message.success(this.rightMap[this.menuObject.switch].menuName + '成功')
+          } else {
+            userInfo.status = userInfo.status === 1 ? 2 : 1
+            this.$message.error(this.rightMap[this.menuObject.switch].menuName + '失败！')
+          }
         })
       },
 
@@ -519,11 +532,12 @@
               user: this.editForm
             }).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('修改用户成功')
+              this.$message.success(this.rightMap[this.menuObject.edit].menuName + '成功')
               this.getUserList()
               this.editDialogVisible = false
             } else {
-              this.$message.error('修改用户失败！')
+              this.$message.error(this.rightMap[this.menuObject.edit].menuName + '失败！')
+              this.editForm.birthday = Number(this.editForm.birthday * 1000)
             }
           })
         })
@@ -531,7 +545,7 @@
 
       removeUserById (id) {
         this.$confirm(
-          '此操作将永久删除该用户, 是否继续?',
+          '此操作将无法撤回, 是否继续?',
           '提示',
           {
             confirmButtonText: '确定',
@@ -541,17 +555,16 @@
         ).then(() => {
           this.$axios.post(`/bdmsAccountApi/service.v1.Account/DeleteUser`, {id: id}).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
-              this.$message.success('删除成功')
+              this.$message.success(this.rightMap[this.menuObject.delete].menuName + '成功')
               this.getUserList()
             } else {
-              this.$message.error('删除失败！')
+              this.$message.error(this.rightMap[this.menuObject.delete].menuName + '失败！')
             }
-          }).catch(() => {
-            this.$message.info('已取消删除')
           })
+        }).catch(() => {
+          this.$message.info('已取消' + this.rightMap[this.menuObject.delete].menuName)
         })
       },
-
       showRoleDialog (userInfo) {
         this.userInfo = JSON.parse(JSON.stringify(userInfo))
         this.setRoleDialogVisible = true
@@ -572,11 +585,11 @@
             roleId: this.selectedRoleId
           }).then(res => {
           if (res.data.code === 0 && res.data.data.result === 'success') {
-            this.$message.success('分配角色成功')
+            this.$message.success(this.rightMap[this.menuObject.setRole].menuName + '成功')
             this.getUserList()
             this.setRoleDialogVisible = false
           } else {
-            this.$message.error('分配角色失败！')
+            this.$message.error(this.rightMap[this.menuObject.setRole].menuName + '失败！')
           }
         })
       },
@@ -605,7 +618,7 @@
       },
 
       roleFilter (roleId, roleMap) {
-        return roleMap[roleId]
+        return roleMap[roleId] === undefined ? roleMap[0] : roleMap[roleId]
       },
     }
   }

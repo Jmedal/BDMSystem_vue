@@ -45,9 +45,10 @@
             ]
         },
         backgroundDiv: {
-          backgroundImage:'url(' + require('../assets/img/background3.gif') + ')',
-          backgroundRepeat:'no-repeat',
-          backgroundSize:'100% 100%'
+          height: document.documentElement.clientHeight + 'px',
+          backgroundImage: 'url(' + require('../assets/img/background3.gif') + ')',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '100% 100%',
         }
       }
     }, created () {
@@ -65,7 +66,7 @@
             if (res.data.code === 0 && res.data.data.result === 'success') {
               this.$notify({
                 title: '登录成功',
-                message: res.data.data.userInfo.name + '， Welcome to BDMSystem!',
+                message: res.data.data.userInfo.name + '， Welcome to BDMS System!',
                 type: 'success'
               })
               //登录获取token令牌；
@@ -106,9 +107,8 @@
 
 <style lang="less" scoped>
   .login_container {
-    height: 100%;
+    width: 100%;
   }
-
 
   .login_box {
     width: 450px;
