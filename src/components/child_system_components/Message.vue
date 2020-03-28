@@ -444,6 +444,7 @@
           }).then(res => {
           if (res.data.code === 0 && res.data.data.result === 'success') {
             this.$message.success(this.rightMap[this.menuObject.switch].menuName + '成功')
+            this.getMessageList()
           } else {
             message.isTop = message.isTop === 1 ? 2 : 1
             this.$message.error(this.rightMap[this.menuObject.switch].menuName + '失败！')
@@ -464,6 +465,9 @@
           this.$axios.post(`/bdmsMessageApi/service.v1.Message/DeleteMessage`, {id: id}).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
               this.$message.success(this.rightMap[this.menuObject.delete].menuName + '成功')
+              if (this.messagePage.page.length === 1 && this.queryInfo.pageNum > 1) {
+                this.queryInfo.pageNum--
+              }
               this.getMessageList()
             } else {
               this.$message.error(this.rightMap[this.menuObject.delete].menuName + '失败！')

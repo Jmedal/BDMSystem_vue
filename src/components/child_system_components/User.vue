@@ -556,6 +556,9 @@
           this.$axios.post(`/bdmsAccountApi/service.v1.Account/DeleteUser`, {id: id}).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
               this.$message.success(this.rightMap[this.menuObject.delete].menuName + '成功')
+              if (this.userPage.page.length === 1 && this.queryInfo.pageNum > 1) {
+                this.queryInfo.pageNum--
+              }
               this.getUserList()
             } else {
               this.$message.error(this.rightMap[this.menuObject.delete].menuName + '失败！')
@@ -565,6 +568,7 @@
           this.$message.info('已取消' + this.rightMap[this.menuObject.delete].menuName)
         })
       },
+
       showRoleDialog (userInfo) {
         this.userInfo = JSON.parse(JSON.stringify(userInfo))
         this.setRoleDialogVisible = true
