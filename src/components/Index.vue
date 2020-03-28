@@ -71,14 +71,14 @@
                     <el-dropdown trigger="hover" style="max-height: 10px">
                       <span class="el-dropdown-link userInfo-inner"><i class="el-icon-message user-message"></i></span>
                       <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item v-for="item in messageList" @click.native="showMessage(item.id)"
+                        <el-dropdown-item v-for="item in messageList" @click.native="showMessage(item)"
                                           :key="item.id">
-                          <i :class="item.icon">{{item.title}}
-                            <span style="color: #F56C6C">{{item.isRead === 1 ? '（未读）' : ''}}</span><br/>
+                          <i :class="item.icon" style="width: 100%">{{item.title}}
+                            <span style="color: #F56C6C">{{item.isTop === 1 ? '（置顶）' : ''}}{{item.isRead === 1 ? '（未读）' : ''}}</span><br/>
                             <span style="float:left; margin-top: 6px; font-size: 12px" disabled>
                               {{item.publisher}}
                             </span><br/>
-                            <span style="float:left; margin-top: 5px; margin-bottom: 10px; font-size: 12px" disabled>
+                            <span style="float:right; margin-top: 3px; margin-bottom: 10px; font-size: 12px" disabled>
                               {{item.releaseTime | timeFilter('YYYY-mm-dd HH:MM')}}
                             </span>
                           </i>
@@ -377,24 +377,26 @@
         })
       },
 
-      showMessage (id) {
-        this.$axios.post(`/bdmsMessageApi/service.v1.Message/GetMessage`, {id: id}).then(res => {
-          console.log(res)
+      showMessage (message) {
+        this.messageInfo = {}
+        this.$axios.post(`/bdmsMessageApi/service.v1.Message/GetMessage`, {id: message.id}).then(res => {
           if (res.data.code === 0) {
             this.messageInfo = res.data.data.messageInfo
+            this.messageInfo.isRead = message.isRead
             this.messageDrawer = true
           }
         })
       },
 
       messageClose () {
-        this.$axios.post(`/bdmsMessageApi/service.v1.Message/SetMessageUserRead`, {messageId: this.messageInfo.id}).then(res => {
-          if (res.data.code === 0 && res.data.data.result === 'success') {
-            this.getMessage()
-          }
-        })
+        if(this.messageInfo.isRead === 1) {
+          this.$axios.post(`/bdmsMessageApi/service.v1.Message/SetMessageUserRead`, {messageId: this.messageInfo.id}).then(res => {
+            if (res.data.code === 0 && res.data.data.result === 'success') {
+              this.getMessage()
+            }
+          })
+        }
         this.messageDrawer = false
-        this.messageInfo = {}
       },
 
       deleteMessage () {

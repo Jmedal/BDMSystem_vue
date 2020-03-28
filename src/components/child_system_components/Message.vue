@@ -47,6 +47,18 @@
             {{scope.row.releaseTime | timeFilter('YYYY-mm-dd HH:MM')}}
           </template>
         </el-table-column>
+        <el-table-column prop="isTop" label="置顶" width="120px">
+          <template v-slot="scope">
+            <el-tooltip class="item" effect="dark"
+                        :content="rightMap[menuObject.switch] === undefined ? '禁用' : rightMap[menuObject.switch].menuName"
+                        placement="top"
+                        :enterable="false">
+              <el-switch v-model="scope.row.isTop === 1" @change="MessageIsTopChanged(scope.row)"
+                         :disabled="rightMap[menuObject.switch] === undefined">
+              </el-switch>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="250px">
           <template v-slot="scope">
             <el-tooltip class="item" effect="dark"
@@ -235,6 +247,7 @@
           add: 71,
           edit: 72,
           delete: 73,
+          switch: 75,
         },
         rightMap: {},
         //加载分页
@@ -418,6 +431,23 @@
               this.editForm.releaseTime = Number(this.editForm.releaseTime * 1000)
             }
           })
+        })
+      },
+
+      MessageIsTopChanged (message) {
+        message.isTop = message.isTop === 1 ? 2 : 1
+        console.log(message.isTop)
+        this.$axios.post(`/bdmsMessageApi/service.v1.Message/SetMessageIsTop`,
+          {
+            id: message.id,
+            isTop: message.isTop
+          }).then(res => {
+          if (res.data.code === 0 && res.data.data.result === 'success') {
+            this.$message.success(this.rightMap[this.menuObject.switch].menuName + '成功')
+          } else {
+            message.isTop = message.isTop === 1 ? 2 : 1
+            this.$message.error(this.rightMap[this.menuObject.switch].menuName + '失败！')
+          }
         })
       },
 
