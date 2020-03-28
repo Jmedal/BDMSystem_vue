@@ -36,12 +36,12 @@
         loginUserRules: {
           account: [
             {required: true, message: '请输入用戶名', trigger: 'blur'},
-            {min: 3, max: 12, message: '用戶名长度在 3 到 12 个字符', trigger: 'blur'}
+            {min: 4, max: 20, message: '用户名的长度在4~20个字符之间', trigger: 'blur'}
           ],
           password:
             [
               {required: true, message: '请输入密码', trigger: 'blur'},
-              {min: 4, max: 12, message: '密码长度在 3 到 12 个字符', trigger: 'blur'}
+              {min: 4, max: 20, message: '密码的长度在4~20个字符之间', trigger: 'blur'}
             ]
         },
         backgroundDiv: {
