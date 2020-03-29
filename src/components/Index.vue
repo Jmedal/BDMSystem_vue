@@ -276,6 +276,9 @@
             }
           }
         })
+        window.setInterval(() => {
+          setTimeout(this.getMessage, 0)
+        }, 30000)
       },
 
       getMessage () {
