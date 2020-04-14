@@ -224,7 +224,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           grid: {
@@ -276,7 +276,7 @@
             show: true,
             top: 20,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#59c4e6'],
@@ -327,7 +327,7 @@
             show: true,
             top: 20,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#edafda'],
@@ -378,7 +378,7 @@
             show: true,
             top: 20,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#516b91'],

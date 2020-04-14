@@ -187,7 +187,7 @@
             top: 'bottom',
             right:40,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           legend: {},
@@ -290,7 +290,7 @@
             top: 'bottom',
             right:40,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           legend: {},

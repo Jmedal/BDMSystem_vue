@@ -706,7 +706,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           grid: {
@@ -760,7 +760,7 @@
             show: true,
             top: 20,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#59c4e6'],
@@ -811,7 +811,7 @@
             show: true,
             top: 20,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#edafda'],
@@ -860,7 +860,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           legend: {
@@ -935,7 +935,7 @@
     width: 100%;
     background-color: #fff;
     border-radius: 3px;
-    box-shadow: 0 0 5px #ddd;
+    box-shadow: 0 0 10px #ddd;
   }
 
   .company_data_title {

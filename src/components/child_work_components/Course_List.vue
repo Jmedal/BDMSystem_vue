@@ -98,7 +98,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#516b91'],
@@ -148,7 +148,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#59c4e6'],
@@ -198,7 +198,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#edafda'],

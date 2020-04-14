@@ -240,7 +240,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#8ec9ff'],
@@ -303,7 +303,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           grid: {

@@ -197,7 +197,7 @@ import echarts from 'echarts'
         }
       },
       'symbolSize': '6',
-      'symbol': 'emptyCircle',
+      'symbol': 'circle',
       'smooth': true,
       'color': [
         '#516b91',

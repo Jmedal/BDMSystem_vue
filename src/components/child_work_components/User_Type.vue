@@ -136,7 +136,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           dataset: {
@@ -202,7 +202,7 @@
             show: true,
             top: 43,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           legend: {
@@ -249,7 +249,7 @@
             show: true,
             top: 43,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           legend: {

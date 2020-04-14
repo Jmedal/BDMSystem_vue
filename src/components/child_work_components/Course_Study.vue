@@ -179,7 +179,7 @@
             show: true,
             left: 'right',
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           color: ['#59c4e6', '#edafda'],
@@ -246,7 +246,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           legend: {
@@ -296,7 +296,7 @@
           toolbox: {
             show: true,
             feature: {
-              saveAsImage: {}
+              saveAsImage: {show: true}
             }
           },
           legend: {
