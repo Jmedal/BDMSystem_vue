@@ -18,7 +18,4 @@
 安装echarts 图表 cnpm install echarts --save
 
 安装axios 数据请求 cnpm install axios --save
-
-安装富文本编辑器 cnpm install vue-quill-editor --save
-
-
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
