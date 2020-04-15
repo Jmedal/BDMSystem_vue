@@ -264,7 +264,7 @@
     },
     methods: {
       init () {
-        this.userInfo = window.sessionStorage.getItem('save') === '1' ? window.sessionStorage.getItem('userInfo') : window.localStorage.getItem('userInfo')
+        this.userInfo = window.localStorage.getItem('save') === '1' ? window.localStorage.getItem('userInfo') : window.sessionStorage.getItem('userInfo')
         this.userInfo = JSON.parse(Base64.decode(this.userInfo))
         this.$axios.post(`/bdmsAccountApi/service.v1.Account/GetUserRole`, {id: this.userInfo.id}).then(res => {
           if (res.data.code === 0) {
@@ -364,9 +364,9 @@
                 }).then(res => {
                 if (res.data.code === 0 && res.data.data.result === 'success') {
                   this.userInfo = JSON.parse(JSON.stringify(this.editForm))
-                  window.sessionStorage.getItem('save') === '1' ?
-                    window.sessionStorage.setItem('userInfo', Base64.encode(this.userInfo)) :
-                    window.localStorage.setItem('userInfo', Base64.encode(this.userInfo))
+                  window.localStorage.getItem('save') === '1' ?
+                    window.localStorage.setItem('userInfo', Base64.encode(this.userInfo)) :
+                    window.sessionStorage.setItem('userInfo', Base64.encode(this.userInfo))
                   this.$message.success('保存成功')
                 } else {
                   this.$message.error('保存失败！')
