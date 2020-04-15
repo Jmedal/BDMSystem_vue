@@ -8,7 +8,7 @@
           </div>
         </el-col>
       </el-row>
-      <el-row :gutter="50">
+      <el-row :gutter="40">
         <el-col :span="1">
           <div style="height: 10px">
           </div>
