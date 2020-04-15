@@ -298,7 +298,7 @@
   }
 
   .pie_box {
-    height: 100%;
+    height: 835px;
     width: 100%;
     border-radius: 3px;
     position: relative;
