@@ -39,28 +39,35 @@ module.exports = {
         }
       },
       '/userApi': {
-        target: 'http://0.0.0.0:8002', //这里面是你要访问的IP地址
+        target: 'http://47.107.116.160:5101', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/userApi': ''
         }
       },
       '/courseApi': {
-        target: 'http://0.0.0.0:8003', //这里面是你要访问的IP地址
+        target: 'http://47.107.116.160:5102', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/courseApi': ''
         }
       },
+      '/curriculumApi': {
+        target: 'http://47.107.116.160:5103', //这里面是你要访问的IP地址
+        changeOrigin: true,     //开启代理
+        pathRewrite: {
+          '^/curriculumApi': ''
+        }
+      },
       '/professionApi': {
-        target: 'http://0.0.0.0:8004', //这里面是你要访问的IP地址
+        target: 'http://47.107.116.160:5104', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/professionApi': ''
         }
       },
       '/companyApi': {
-        target: 'http://0.0.0.0:8005', //这里面是你要访问的IP地址
+        target: 'http://47.107.116.160:5105', //这里面是你要访问的IP地址
         changeOrigin: true,     //开启代理
         pathRewrite: {
           '^/companyApi': ''
@@ -100,33 +107,33 @@ module.exports = {
   },
 
   build: {
-      // Template for index.html
-      index: path.resolve(__dirname, '../dist/index.html'),
+    // Template for index.html
+    index: path.resolve(__dirname, '../dist/index.html'),
 
-      // Paths
-      assetsRoot: path.resolve(__dirname, '../dist'),
-      assetsSubDirectory: 'static',
-      assetsPublicPath: '/',
+    // Paths
+    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsSubDirectory: 'static',
+    assetsPublicPath: '/',
 
-      /**
-       * Source Maps
-       */
+    /**
+     * Source Maps
+     */
 
-      productionSourceMap: true,
-      // https://webpack.js.org/configuration/devtool/#production
-      devtool: '#source-map',
+    productionSourceMap: true,
+    // https://webpack.js.org/configuration/devtool/#production
+    devtool: '#source-map',
 
-      // Gzip off by default as many popular static hosts such as
-      // Surge or Netlify already gzip all static assets for you.
-      // Before setting to `true`, make sure to:
-      // npm install --save-dev compression-webpack-plugin
-      productionGzip: false,
-      productionGzipExtensions: ['js', 'css'],
+    // Gzip off by default as many popular static hosts such as
+    // Surge or Netlify already gzip all static assets for you.
+    // Before setting to `true`, make sure to:
+    // npm install --save-dev compression-webpack-plugin
+    productionGzip: false,
+    productionGzipExtensions: ['js', 'css'],
 
-      // Run the build command with an extra argument to
-      // View the bundle analyzer report after build finishes:
-      // `npm run build --report`
-      // Set to `true` or `false` to always turn it on or off
-      bundleAnalyzerReport: process.env.npm_config_report
-    }
+    // Run the build command with an extra argument to
+    // View the bundle analyzer report after build finishes:
+    // `npm run build --report`
+    // Set to `true` or `false` to always turn it on or off
+    bundleAnalyzerReport: process.env.npm_config_report
+  }
 }

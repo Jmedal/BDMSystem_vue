@@ -1,12 +1,12 @@
 <template>
   <div class="curriculum_container">
 
-    <!--学科依赖拓扑图-->
+    <!--科目依赖拓扑图-->
     <div class="curriculum_up_box">
       <el-row :gutter="20">
         <el-col :span="3">
           <div class="curriculum_data_title">
-            <h3>学科依赖</h3>
+            <h3>科目依赖</h3>
           </div>
         </el-col>
       </el-row>
@@ -26,12 +26,12 @@
       </el-row>
     </div>
 
-    <!--学科课程比例图-->
+    <!--科目课程比例图-->
     <div class="curriculum_end_box">
       <el-row :gutter="20">
         <el-col :span="3">
           <div class="curriculum_data_title">
-            <h3>学科课程</h3>
+            <h3>科目课程</h3>
           </div>
         </el-col>
       </el-row>
@@ -58,7 +58,11 @@
   export default {
     name: 'curriculum_heat',
     data () {
-      return {}
+      return {
+        graph: {},
+        legendData: [],
+        seriesData: [],
+      }
     },
     created () {
       this.init()
@@ -68,51 +72,54 @@
       this.curriculumPieEchart()
     },
     methods: {
+      init () {
+        //科目依赖
+        this.$axios.post(`/curriculumApi/service.v1.WorknetCurriculum/WorknetCurriculumGraph`).then(res => {
+          if (res.data.code === 0) {
+            this.graph = res.data.data
+            this.curriculumGraphEchart()
+          }
+        })
+
+        //科目课程数量
+        this.$axios.post(`/curriculumApi/service.v1.WorknetCurriculum/WorknetCurriculumCourse`).then(res => {
+          if (res.data.code === 0) {
+            this.legendData = res.data.data.curriculumName
+            this.legendData.forEach((v, i) => {
+              let data = {}
+              data.name = v
+              data.value = res.data.data.courseNumber[i]
+              this.seriesData.push(data)
+            })
+            this.curriculumPieEchart()
+          }
+        })
+      },
+
       curriculumGraphEchart () {
         let myChart = this.$echarts.init(document.getElementById('curriculum_topological_graph_echart'), 'westeros')
-
-        let graph = {}
-
-        graph.nodes = [
-          {id: 0, name: '类目1'},
-          {id: 1, name: '类目2'},
-          {id: 2, name: '类目3'},
-          {id: 3, name: '类目4'},
-          {id: 4, name: '类目5'},
-          {id: 5, name: '类目6'},
-          {id: 6, name: '类目7'},
-          {id: 7, name: '类目8'},
-          {id: 8, name: '类目9'},
-        ]
-        graph.links = [
-          {id: 0, source: 1, target: 0},
-          {id: 1, source: 2, target: 1},
-          {id: 2, source: 3, target: 2},
-          {id: 3, source: 3, target: 0},
-          {id: 4, source: 4, target: 8},
-          {id: 5, source: 5, target: 0},
-          {id: 6, source: 6, target: 1},
-          {id: 7, source: 7, target: 6},
-          {id: 8, source: 8, target: 3},
-        ]
-
         let categories = []
-        for (let i = 0; i < 9; i++) {
-          categories[i] = {
-            name: graph.nodes[i].name
-          }
-          graph.nodes[i].category = i
+        let nodeMap = {}
+        if (this.graph.nodes !== null && this.graph.nodes !== undefined) {
+          this.graph.nodes.forEach((node, i) => {
+            node.itemStyle = null
+            node.symbolSize = 15
+            node.value = node.symbolSize
+            node.x = node.y = null
+            node.draggable = true
+            node.category = i
+            categories[i] = {name: node.name}
+            nodeMap[node.id] = i
+          })
+          this.graph.links.forEach(e => {
+            e.source = nodeMap[e.source]
+            e.target = nodeMap[e.target]
+          })
         }
-        graph.nodes.forEach(function (node) {
-          node.itemStyle = null
-          node.symbolSize = 15
-          node.value = node.symbolSize
-          node.x = node.y = null
-          node.draggable = true
-        })
+
         let option = {
           title: {
-            text: '学科依赖拓扑图',
+            text: '科目依赖拓扑图',
             subtext: 'worknet',
             left: 'right'
           },
@@ -137,20 +144,20 @@
           animation: false,
           series: [
             {
-              name: '学科',
+              name: '科目',
               type: 'graph',
               layout: 'force',
-              data: graph.nodes,
-              links: graph.links,
+              data: this.graph.nodes,
+              links: this.graph.links,
               categories: categories,
               roam: true,
               label: {
-                show:true,
+                show: true,
                 position: 'top'
               },
               focusNodeAdjacency: true,
               edgeSymbol: ['circle', 'arrow'],
-              edgeSymbolSize: [0, 5],
+              edgeSymbolSize: [0, 7],
               force: {
                 repulsion: 350
               }
@@ -164,7 +171,7 @@
         let myChart = this.$echarts.init(document.getElementById('curriculum_pie_echart'), 'westeros')
         let option = {
           title: {
-            text: '学科拥有课程数量比例',
+            text: '科目拥有课程数量比例',
             subtext: 'worknet',
             left: 'right'
           },
@@ -182,11 +189,11 @@
           legend: {
             orient: 'vertical',
             left: 10,
-            data: ['直达', '营销广告', '搜索引擎', '邮件营销', '联盟广告', '视频广告', '百度', '谷歌', '必应', '其他']
+            data: this.legendData
           },
           series:
             {
-              name: '访问来源',
+              name: '科目名',
               type: 'pie',
               radius: ['40%', '55%'],
               label: {
@@ -219,19 +226,9 @@
                   }
                 }
               },
-              data: [
-                {value: 335, name: '直达'},
-                {value: 310, name: '邮件营销'},
-                {value: 234, name: '联盟广告'},
-                {value: 135, name: '视频广告'},
-                {value: 1048, name: '百度'},
-                {value: 251, name: '谷歌'},
-                {value: 147, name: '必应'},
-                {value: 102, name: '其他'}
-              ]
+              data: this.seriesData
             }
         }
-
         myChart.setOption(option, true)
       },
     }
