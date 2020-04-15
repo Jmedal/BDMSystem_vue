@@ -474,7 +474,7 @@
             }
           })
         }).catch(() => {
-          this.$message.info('已取消' + this.rightMap[this.menuObject.edit].menuName)
+          this.$message.info('已取消' + this.rightMap[this.menuObject.delete].menuName)
         })
       },
     },
