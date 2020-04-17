@@ -136,7 +136,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="2">
-          <el-col :span="6">
+          <el-col :span="7">
             <el-form-item label="发布时间" prop="releaseTime">
               <el-date-picker
                 v-model="addForm.releaseTime"
@@ -211,7 +211,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="2">
-          <el-col :span="6">
+          <el-col :span="7">
             <el-form-item label="发布时间" prop="releaseTime">
               <el-date-picker
                 v-model="editForm.releaseTime"
