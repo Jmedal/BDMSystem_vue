@@ -104,7 +104,7 @@
     </el-card>
 
     <el-dialog
-      :title="rightMap[menuObject.add].menuName"
+      :title="rightMap[menuObject.add] === undefined ? '禁用' : rightMap[menuObject.add].menuName"
       :visible.sync="addDialogVisible"
       width="550px"
       @close="addDialogClosed">
@@ -129,7 +129,7 @@
     </el-dialog>
 
     <el-dialog
-      :title="rightMap[menuObject.edit].menuName"
+      :title="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
       :visible.sync="editDialogVisible"
       width="550px"
       @close="editDialogClosed">
@@ -154,7 +154,7 @@
     </el-dialog>
 
     <el-dialog
-      :title="rightMap[menuObject.setRoleMenu].menuName"
+      :title="rightMap[menuObject.setRoleMenu] === undefined ? '禁用' : rightMap[menuObject.setRoleMenu].menuName"
       :visible.sync="setMenuDialogVisible"
       width="45%"
       @close="setMenuDialogClosed">
