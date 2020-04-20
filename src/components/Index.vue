@@ -255,7 +255,9 @@
           }, {
             value: '女',
             label: '女'
-          }]
+          }],
+        //定时器
+        messageInterval: {},
       }
     }, created () {
       this.init()
@@ -276,7 +278,7 @@
             }
           }
         })
-        window.setInterval(() => {
+        this.messageInterval = window.setInterval(() => {
           setTimeout(this.getMessage, 0)
         }, 30000)
       },
@@ -317,6 +319,7 @@
       },
 
       logout () {
+        window.clearInterval(this.messageInterval)
         let save = window.localStorage.getItem('save')
         save === '1' ? window.localStorage.clear() : window.sessionStorage.clear()
         window.localStorage.setItem('save', save)
@@ -392,7 +395,7 @@
       },
 
       messageClose () {
-        if(this.messageInfo.isRead === 1) {
+        if (this.messageInfo.isRead === 1) {
           this.$axios.post(`/bdmsMessageApi/service.v1.Message/SetMessageUserRead`, {messageId: this.messageInfo.id}).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
               this.getMessage()
