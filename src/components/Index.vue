@@ -224,7 +224,7 @@
           ],
           name: [
             {required: true, message: '请输入姓名', trigger: 'blur'},
-            {min: 2, max: 20, message: '姓名的长度在2~20个字符之间', trigger: 'blur'},
+            {min: 2, max: 20, message: '姓名长度在2~20个字符之间', trigger: 'blur'},
           ],
           birthday: [
             {required: true, message: '请选择生日日期', trigger: 'blur'},
