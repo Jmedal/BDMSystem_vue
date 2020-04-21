@@ -349,7 +349,7 @@
 
       userInfoClose (done) {
         this.$refs.editFormRef.validate(volid => {
-          if (!volid) done()
+          if (!volid) return done()
           this.editForm.birthday = Number(this.editForm.birthday / 1000)
           if (JSON.stringify(this.userInfo) !== JSON.stringify(this.editForm)) {
             this.$confirm(
