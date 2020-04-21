@@ -30,7 +30,7 @@
       <!-- 用户列表区域 -->
       <el-table :data="userPage.page" v-loading="loading" border stripe>
         <el-table-column type="index" label="#" width="40px"></el-table-column>
-        <el-table-column prop="account" label="用户名"></el-table-column>
+        <el-table-column prop="account" label="帐号"></el-table-column>
         <el-table-column prop="name" label="姓名" width="100px"></el-table-column>
         <el-table-column prop="roleId" label="角色" width="130px">
           <template v-slot="scope">
@@ -120,7 +120,7 @@
                label-width="80px">
         <el-row :gutter="2">
           <el-col :span="11">
-            <el-form-item label="用户名" prop="account">
+            <el-form-item label="帐号" prop="account">
               <el-input v-model="addForm.account"></el-input>
             </el-form-item>
           </el-col>
@@ -195,7 +195,7 @@
                label-width="80px">
         <el-row :gutter="2">
           <el-col :span="11">
-            <el-form-item label="用户名" prop="account">
+            <el-form-item label="帐号" prop="account">
               <el-input v-model="editForm.account" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -265,7 +265,7 @@
       width="500px"
       @close="setRoleDialogClosed">
       <div>
-        <p style="text-align:left; margin-left: 26px">用户名：{{userInfo.account}} </p>
+        <p style="text-align:left; margin-left: 26px">帐号：{{userInfo.account}} </p>
         <p style="text-align:left; margin-left: 40px">姓名：{{userInfo.name}} </p>
         <p style="text-align:left; margin-top: 20px;">当前的角色： {{userInfo.roleId | roleFilter(roleMap)}}</p>
         <p style="text-align:left;">请分配角色:
@@ -298,7 +298,7 @@
           if (res.data.code === 0 && res.data.data.result === 'success') {
             callback()
           } else {
-            callback(new Error('用户名已存在'))
+            callback(new Error('帐号已存在'))
           }
         })
       }
@@ -355,8 +355,8 @@
         },
         addFormRules: {
           account: [
-            {required: true, message: '请输入用户名', trigger: 'blur'},
-            {min: 4, max: 20, message: '用户名的长度在4~20个字符之间', trigger: 'blur'},
+            {required: true, message: '请输入帐号', trigger: 'blur'},
+            {min: 4, max: 20, message: '帐号的长度在4~20个字符之间', trigger: 'blur'},
             {validator: checkAccount, trigger: 'blur'},
           ],
           password: [

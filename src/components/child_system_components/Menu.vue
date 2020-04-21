@@ -277,18 +277,18 @@
         },
         addFormRules: {
           menuName: [
-            {required: true, message: '请输入名称', trigger: 'blur'},
-            {min: 2, max: 25, message: '名称的长度在2~25个字符之间', trigger: 'blur'},
+            {required: true, message: '请输入菜单名称', trigger: 'blur'},
+            {min: 2, max: 25, message: '菜单名称的长度在2~25个字符之间', trigger: 'blur'},
           ],
           icon: [
             {required: true, message: '请输入图标代号', trigger: 'blur'},
-            {min: 2, max: 50, message: '代号的长度在2~50个字符之间', trigger: 'blur'},
+            {min: 2, max: 50, message: '图标代号的长度在2~50个字符之间', trigger: 'blur'},
           ],
           levels: [
-            {required: true, message: '请选择等级', trigger: 'blur'},
+            {required: true, message: '请选择菜单层级', trigger: 'blur'},
           ],
           pid: [
-            {required: true, message: '请选择父级id', trigger: 'blur'},
+            {required: true, message: '请选择父级菜单', trigger: 'blur'},
           ],
           num: [
             {required: true, message: '请输入序号', trigger: 'blur'},
@@ -304,15 +304,15 @@
         editForm: {},
         editFormRules: {
           menuName: [
-            {required: true, message: '请输入名称', trigger: 'blur'},
-            {min: 2, max: 25, message: '名称的长度在2~25个字符之间', trigger: 'blur'},
+            {required: true, message: '请输入菜单名称', trigger: 'blur'},
+            {min: 2, max: 25, message: '菜单名称的长度在2~25个字符之间', trigger: 'blur'},
           ],
           icon: [
             {required: true, message: '请输入图标代号', trigger: 'blur'},
-            {min: 2, max: 50, message: '代号的长度在2~50个字符之间', trigger: 'blur'},
+            {min: 2, max: 50, message: '图标代号的长度在2~50个字符之间', trigger: 'blur'},
           ],
           levels: [
-            {required: true, message: '请选择等级', trigger: 'blur'},
+            {required: true, message: '请选择菜单层级', trigger: 'blur'},
           ],
           pid: [
             {required: true, message: '请选择父级菜单', trigger: 'blur'},

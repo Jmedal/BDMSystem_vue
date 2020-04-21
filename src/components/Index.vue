@@ -115,7 +115,7 @@
                label-width="80px">
         <el-row :gutter="2">
           <el-col :span="11">
-            <el-form-item label="用户名" prop="account">
+            <el-form-item label="帐号" prop="account">
               <el-input v-model="editForm.account" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -223,7 +223,8 @@
             {min: 4, max: 20, message: '密码的长度在4~20个字符之间', trigger: 'blur'},
           ],
           name: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
+            {required: true, message: '请输入姓名', trigger: 'blur'},
+            {min: 2, max: 20, message: '姓名的长度在2~20个字符之间', trigger: 'blur'},
           ],
           birthday: [
             {required: true, message: '请选择生日日期', trigger: 'blur'},

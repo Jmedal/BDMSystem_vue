@@ -274,15 +274,15 @@
         userList: [],
         addFormRules: {
           title: [
-            {required: true, message: '请输入标题', trigger: 'blur'},
+            {required: true, message: '请输入通知标题', trigger: 'blur'},
             {min: 2, max: 50, message: '通知标题的长度在2~50个字符之间', trigger: 'blur'},
           ],
           icon: [
             {required: true, message: '请选择图标', trigger: 'blur'},
           ],
           content: [
-            {required: true, message: '请输入内容', trigger: 'blur'},
-            {min: 4, max: 15000, message: '通知内容的过长', trigger: 'blur'},
+            {required: true, message: '请输入通知内容', trigger: 'blur'},
+            {min: 4, max: 15000, message: '通知内容过长', trigger: 'blur'},
           ],
           releaseTime: [
             {required: true, message: '请选择发布时间（可预约时间）', trigger: 'blur'},
@@ -293,14 +293,14 @@
         editForm: {},
         editFormRules: {
           title: [
-            {required: true, message: '请输入标题', trigger: 'blur'},
+            {required: true, message: '请输入通知标题', trigger: 'blur'},
             {min: 2, max: 50, message: '通知标题的长度在2~50个字符之间', trigger: 'blur'},
           ],
           icon: [
             {required: true, message: '请选择图标', trigger: 'blur'},
           ],
           content: [
-            {required: true, message: '请输入内容', trigger: 'blur'},
+            {required: true, message: '请输入通知内容', trigger: 'blur'},
             {min: 4, max: 15000, message: '通知内容的长度过长', trigger: 'blur'},
           ],
           releaseTime: [
