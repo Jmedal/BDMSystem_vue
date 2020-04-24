@@ -178,8 +178,8 @@
 
       //用户激活比例
       courseActivateEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_activate_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_activate_echart'), 'westeros')
+        let option = {
           title: {
             text: '课程激活比例',
             subtext: 'worknet',
@@ -230,8 +230,8 @@
 
       //网站新增课程数量变化
       courseOpenEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_open_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_open_echart'), 'westeros')
+        let option = {
           title: {
             text: '新课程月开设数量变化曲线',
             subtext: 'worknet',
@@ -267,15 +267,15 @@
 
       //课程新增学员数量变化
       courseNewStudentEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_new_student_echart'), 'westeros')
-        var courseName = []
-        var seriesDate = []
+        let myChart = this.$echarts.init(document.getElementById('course_new_student_echart'), 'westeros')
+        let courseName = []
+        let seriesDate = []
         if (this.studentChange.student === undefined || this.studentChange.student == null) {
           this.studentChange.student = []
         }
-        for (var i = 0; i < this.studentChange.student.length; i++) {
+        for (let i = 0; i < this.studentChange.student.length; i++) {
           courseName.push(this.studentChange.student[i].courseName)
-          var option = {
+          let option = {
             name: this.studentChange.student[i].courseName,
             type: 'line',
             stack: this.studentChange.student[i].courseName,
@@ -284,7 +284,7 @@
           }
           seriesDate.push(option)
         }
-        var option = {
+        let option = {
           title: {
             text: '课程月新增学员数量变化曲线'
           },
@@ -335,8 +335,8 @@
 
       //标签删除
       handleClose (tag) {
-        var tagIndex = this.tags.indexOf(tag)
-        var courseIdIndex = this.selectValue.courseId.indexOf(this.tags[tagIndex].id)
+        let tagIndex = this.tags.indexOf(tag)
+        let courseIdIndex = this.selectValue.courseId.indexOf(this.tags[tagIndex].id)
         this.selectValue.courseId.splice(courseIdIndex, 1)
         this.tags.splice(tagIndex, 1)
       }

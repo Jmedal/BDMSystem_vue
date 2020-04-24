@@ -162,8 +162,8 @@
 
       //课程学员完成数
       courseStudyEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_study_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_study_echart'), 'westeros')
+        let option = {
           title: {
             text: '学员完成课程学习情况',
             subtext: 'worknet',
@@ -230,8 +230,8 @@
 
       //课程平均分排行榜
       courseScoreListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_score_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_score_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '课程平均分排行榜',
             subtext: 'worknet',
@@ -282,8 +282,8 @@
 
       //课程平均分区间数
       courseScorePieEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_score_pie_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_score_pie_echart'), 'westeros')
+        let option = {
           title: {
             text: '不同平均分区间含有课程数量比例',
             subtext: 'worknet',

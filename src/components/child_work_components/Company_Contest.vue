@@ -187,15 +187,15 @@
 
       // 公司发布笔试数量变化
       companyNewConetestEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_new_contest_echart'), 'westeros')
-        var companyName = []
-        var seriesDate = []
+        let myChart = this.$echarts.init(document.getElementById('company_new_contest_echart'), 'westeros')
+        let companyName = []
+        let seriesDate = []
         if (this.contestChange.contest === undefined || this.contestChange.contest == null) {
           this.contestChange.contest = []
         }
-        for (var i = 0; i < this.contestChange.contest.length; i++) {
+        for (let i = 0; i < this.contestChange.contest.length; i++) {
           companyName.push(this.contestChange.contest[i].companyName)
-          var option = {
+          let option = {
             name: this.contestChange.contest[i].companyName,
             type: 'line',
             stack: this.contestChange.contest[i].companyName,
@@ -205,7 +205,7 @@
           seriesDate.push(option)
         }
 
-        var option = {
+        let option = {
           title: {
             text: '公司月发布笔试数量变化趋势'
           },
@@ -252,16 +252,16 @@
 
       //标签删除
       handleClose (tag) {
-        var tagIndex = this.tags.indexOf(tag)
-        var courseIdIndex = this.selectValue.companyId.indexOf(this.tags[tagIndex].id)
+        let tagIndex = this.tags.indexOf(tag)
+        let courseIdIndex = this.selectValue.companyId.indexOf(this.tags[tagIndex].id)
         this.selectValue.companyId.splice(courseIdIndex, 1)
         this.tags.splice(tagIndex, 1)
       },
 
       //公司发布笔试数量排行
       companyContestListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_contest_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('company_contest_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '公司发布笔试总数Top15',
             subtext: 'worknet'
@@ -311,8 +311,8 @@
 
       //公司发布笔试（正在进行）数量排行
       companyContestingListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_contesting_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('company_contesting_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '公司发布笔试(进行中)数量Top15',
             subtext: 'worknet'
@@ -362,8 +362,8 @@
 
       //公司笔试报名数量排行
       companyApplyListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_apply_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('company_apply_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '公司笔试报名人数Top15',
             subtext: 'worknet'

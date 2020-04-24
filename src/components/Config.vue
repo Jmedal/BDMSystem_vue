@@ -60,7 +60,7 @@
           .then(res => {
             if (res.data.code === 0 && res.data.data && res.data.data.length > 0) {
               this.tableData = res.data.data
-              for (var i = 0; i < this.tableData.length; i++) {
+              for (let i = 0; i < this.tableData.length; i++) {
                 this.dateList.push({text: this.tableData[i].date, value: this.tableData[i].date})
               }
             }

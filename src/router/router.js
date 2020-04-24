@@ -1,25 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Login'
-import Index from '@/components/index'
-import House from '@/components/house'
-import User from '@/components/child_system_components/user'
-import Menu from '@/components/child_system_components/menu'
-import Role from '@/components/child_system_components/role'
-import Message from '@/components/child_system_components/message'
-import PageNoFound from '@/components/404NoFound'
-import User_Type from '@/components/child_work_components/user_type'
-import Course_Activity from '@/components/child_work_components/course_activity'
-import Course_Study from '@/components/child_work_components/course_study'
-import Course_List from '@/components/child_work_components/course_list'
-import Curriculum_Heat from '@/components/child_work_components/curriculum_heat'
-import Profession_Heat from '@/components/child_work_components/profession_heat'
-import Company_Profession from '@/components/child_work_components/company_profession'
-import Company_Contest from '@/components/child_work_components/company_contest'
-import Pholcus from '@/components/child_work_components/pholcus'
-import Home from '@/components/home'
-import Application from '@/components/application'
-import Config from '@/components/config'
+import Login from '../components/Login'
+import Index from '../components/index'
+import House from '../components/house'
+import User from '../components/child_system_components/user'
+import Menu from '../components/child_system_components/menu'
+import Role from '../components/child_system_components/role'
+import Message from '../components/child_system_components/message'
+import PageNoFound from '../components/404NoFound'
+import User_Type from '../components/child_work_components/user_type'
+import Course_Activity from '../components/child_work_components/course_activity'
+import Course_Study from '../components/child_work_components/course_study'
+import Course_List from '../components/child_work_components/course_list'
+import Curriculum_Heat from '../components/child_work_components/curriculum_heat'
+import Profession_Heat from '../components/child_work_components/profession_heat'
+import Company_Profession from '../components/child_work_components/company_profession'
+import Company_Contest from '../components/child_work_components/company_contest'
+import Imooc_Course from '../components/child_work_components/imooc_course'
+import Imooc_Course_Data from '../components/child_work_components/Imooc_Course_Data'
+import Pholcus from '../components/child_work_components/pholcus'
+import Config from '../components/config'
+
 
 Vue.use(Router)
 
@@ -107,20 +108,20 @@ const router = new Router({
           component: Company_Contest
         },
         {
+          path: 'imooc_course',
+          name: 'imooc_course',
+          component: Imooc_Course
+        },
+        {
+          path: 'imooc_course_data',
+          name: 'imooc_course_data',
+          component: Imooc_Course_Data
+        },
+        {
           path: 'pholcus',
           name: 'pholcus',
           component: Pholcus
-        },
-        {
-          path: 'home',
-          name: 'home',
-          component: Home
         }, {
-          path: 'application',
-          name: 'application',
-          component: Application
-        },
-        {
           path: 'config',
           name: 'config',
           component: Config

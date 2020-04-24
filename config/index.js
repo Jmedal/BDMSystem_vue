@@ -73,6 +73,13 @@ module.exports = {
           '^/companyApi': ''
         }
       },
+      '/imoocCourseApi': {
+        target: 'http://47.107.116.160:5201', //这里面是你要访问的IP地址
+        changeOrigin: true,     //开启代理
+        pathRewrite: {
+          '^/imoocCourseApi': ''
+        }
+      },
     },
 
     // Various Dev Server settings
