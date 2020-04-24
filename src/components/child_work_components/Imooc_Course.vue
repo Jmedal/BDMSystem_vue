@@ -15,16 +15,16 @@
           <div class="score_data">
           </div>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="5" v-loading="loading">
           <div id="comprehensive_pie_echart" class="score_data"></div>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="5" v-loading="loading">
           <div id="utility_pie_echart" class="score_data"></div>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="5" v-loading="loading">
           <div id="concise_pie_echart" class="score_data"></div>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="5" v-loading="loading">
           <div id="logic_pie_echart" class="score_data"></div>
         </el-col>
         <el-col :span="3">
@@ -40,12 +40,12 @@
     <div class="end_box">
       <div class="list_box">
         <el-row :gutter="0">
-          <el-col :span="12">
-            <div id="course_Commentator_list_echart" class="course_list_box">
+          <el-col :span="12" v-loading="loadingScoreList">
+            <div id="course_score_list_echart" class="course_list_box">
             </div>
             <el-button type="text" class="more_button" @click="handleClickScore" :loading="loadScore">more</el-button>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="12" v-loading="loadingLearnerList">
             <div id="course_Learner_list_echart" class="course_list_box">
             </div>
             <el-button type="text" class="more_button" @click="handleClickLearner" :loading="loadLearner">more
@@ -53,11 +53,11 @@
           </el-col>
         </el-row>
       </div>
-      <div id="type_pie_echart" class="pie_up_box">
+      <div id="class_pie_echart" class="pie_up_box" v-loading="loadingClass">
       </div>
-      <div id="difficulty_pie_echart" class="pie_center_box">
+      <div id="difficulty_pie_echart" class="pie_center_box" v-loading="loadingDifficulty">
       </div>
-      <div id="duration_pie_echart" class="pie_end_box">
+      <div id="duration_pie_echart" class="pie_end_box" v-loading="loadingDuration">
       </div>
     </div>
 
@@ -77,6 +77,7 @@
           concise: [],
           logic: [],
         },
+        loading: false,
         //学习人数/评论数
         number: {
           allLearnerNumber: 0,
@@ -86,25 +87,30 @@
         class: {
           name: []
         },
+        loadingClass: false,
         //课程难度
         difficulty: {
           name: []
         },
+        loadingDifficulty: false,
         //课程时长
         duration: {
           name: []
         },
+        loadingDuration: false,
         //综合评分排行
         scoreList: {
           name: [],
           number: []
         },
+        loadingScoreList: false,
         loadScore: false,
         //学习人数排行
         learnerList: {
           name: [],
           number: []
         },
+        loadingLearnerList: false,
         loadLearner: false,
       }
     },
@@ -122,10 +128,12 @@
     methods: {
       init () {
         //慕课网课程评分比例
+        this.loading = true
         this.$axios.post(`/imoocCourseApi/service.v1.ImoocCourse/ImoocCourseScore`).then(res => {
           if (res.data.code === 0) {
             this.score = res.data.data
             this.courseScoreEchart()
+            this.loading = false
           }
         })
 
@@ -137,18 +145,25 @@
         })
 
         //课程类别/难度/时长比例
+        this.loadingClass = true
+        this.loadingDifficulty = true
+        this.loadingDuration = true
         this.$axios.post(`/imoocCourseApi/service.v1.ImoocCourse/ImoocCourseSection`).then(res => {
           if (res.data.code === 0) {
             this.class = res.data.data.class
             this.difficulty = res.data.data.difficulty
             this.duration = res.data.data.duration
             this.courseClassEchart()
+            this.loadingClass = false
             this.courseDifficultyEchart()
+            this.loadingDifficulty = false
             this.courseDurationEchart()
+            this.loadingDuration = false
           }
         })
 
         //用户综合评分排行
+        this.loadingScoreList = true
         this.$axios.post(`/imoocCourseApi/service.v1.ImoocCourse/ImoocCourseScoreRank`, {location: [0, 30]}).then(res => {
           if (res.data.code === 0) {
             res.data.data.name.forEach((v, i) => {
@@ -156,10 +171,12 @@
             })
             this.scoreList = res.data.data
             this.courseScoreListEchart()
+            this.loadingScoreList = false
           }
         })
 
         //用户学习人数排行
+        this.loadingLearnerList = true
         this.$axios.post(`/imoocCourseApi/service.v1.ImoocCourse/ImoocCourseLearnerRank`, {location: [0, 30]}).then(res => {
           if (res.data.code === 0) {
             res.data.data.name.forEach((v, i) => {
@@ -167,6 +184,7 @@
             })
             this.learnerList = res.data.data
             this.courseLearnerListEchart()
+            this.loadingLearnerList = false
           }
         })
       },
@@ -396,7 +414,7 @@
 
       //课程类别
       courseClassEchart () {
-        let myChart = this.$echarts.init(document.getElementById('type_pie_echart'), 'westeros')
+        let myChart = this.$echarts.init(document.getElementById('class_pie_echart'), 'westeros')
         let classData = []
         this.class.name.forEach((v, i) => {
           classData.push({value: this.class.number[i], name: v})
@@ -570,7 +588,7 @@
 
       //课程综合评分排行榜
       courseScoreListEchart () {
-        let myChart = this.$echarts.init(document.getElementById('course_Commentator_list_echart'), 'westeros')
+        let myChart = this.$echarts.init(document.getElementById('course_score_list_echart'), 'westeros')
         let option = {
           title: {
             text: '课程综合评分排行榜',
