@@ -15,17 +15,17 @@
           <div class="score_data">
           </div>
         </el-col>
-        <el-col :span="5" v-loading="loading">
-          <div id="comprehensive_pie_echart" class="score_data"></div>
+        <el-col :span="5">
+          <div id="comprehensive_pie_echart" class="score_data" v-loading="loading"></div>
         </el-col>
-        <el-col :span="5" v-loading="loading">
-          <div id="utility_pie_echart" class="score_data"></div>
+        <el-col :span="5">
+          <div id="utility_pie_echart" class="score_data" v-loading="loading"></div>
         </el-col>
-        <el-col :span="5" v-loading="loading">
-          <div id="concise_pie_echart" class="score_data"></div>
+        <el-col :span="5">
+          <div id="concise_pie_echart" class="score_data" v-loading="loading"></div>
         </el-col>
-        <el-col :span="5" v-loading="loading">
-          <div id="logic_pie_echart" class="score_data"></div>
+        <el-col :span="5">
+          <div id="logic_pie_echart" class="score_data" v-loading="loading"></div>
         </el-col>
         <el-col :span="3">
           <div class="number_box" style="position: relative; top: 180px;">{{number.allLearnerNumber}}</div>
@@ -40,13 +40,13 @@
     <div class="end_box">
       <div class="list_box">
         <el-row :gutter="0">
-          <el-col :span="12" v-loading="loadingScoreList">
-            <div id="course_score_list_echart" class="course_list_box">
+          <el-col :span="12">
+            <div id="course_score_list_echart" class="course_list_box" v-loading="loadingScoreList">
             </div>
             <el-button type="text" class="more_button" @click="handleClickScore" :loading="loadScore">more</el-button>
           </el-col>
-          <el-col :span="12" v-loading="loadingLearnerList">
-            <div id="course_Learner_list_echart" class="course_list_box">
+          <el-col :span="12">
+            <div id="course_Learner_list_echart" class="course_list_box" v-loading="loadingLearnerList">
             </div>
             <el-button type="text" class="more_button" @click="handleClickLearner" :loading="loadLearner">more
             </el-button>
