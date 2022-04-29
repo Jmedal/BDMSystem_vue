@@ -11,17 +11,17 @@
       <el-col :span="8">
         <div id="course_star_list_echart" class="course_list_box">
         </div>
-        <el-button type="text" class="more_button" @click="handleClickStars">more</el-button>
+        <el-button type="text" class="more_button" @click="handleClickStars" :loading="loadStars">more</el-button>
       </el-col>
       <el-col :span="8">
         <div id="course_click_list_echart" class="course_list_box">
         </div>
-        <el-button type="text" class="more_button" @click="handleClickClick">more</el-button>
+        <el-button type="text" class="more_button" @click="handleClickClick" :loading="loadClick">more</el-button>
       </el-col>
       <el-col :span="8">
         <div id="course_video_list_echart" class="course_list_box">
         </div>
-        <el-button type="text" class="more_button" @click="handleClickVideo">more</el-button>
+        <el-button type="text" class="more_button" @click="handleClickVideo" :loading="loadVideo">more</el-button>
       </el-col>
     </el-row>
   </div>
@@ -32,18 +32,21 @@
     name: 'course_list',
     data () {
       return {
-        starList: {
+        starsList: {
           courseName: [],
           number: []
         },
+        loadStars: false,
         clickList: {
           courseName: [],
           number: []
         },
+        loadClick: false,
         videoList: {
           courseName: [],
           number: []
         },
+        loadVideo: false,
       }
     }, created () {
       this.init()
@@ -59,7 +62,10 @@
         //课程综合评分
         this.$axios.post(`/courseApi/service.v1.WorknetCourse/WorknetCourseStarsRank`, {location: [1, 15]}).then(res => {
           if (res.data.code === 0) {
-            this.starList = res.data.data
+            res.data.data.courseName.forEach((v, i) => {
+              res.data.data.courseName[i] = v.slice(0, 20) + '...'
+            })
+            this.starsList = res.data.data
             this.courseStarsListEchart()
           }
         })
@@ -67,6 +73,9 @@
         //课程点击量
         this.$axios.post(`/courseApi/service.v1.WorknetCourse/WorknetCourseClickRank`, {location: [1, 15]}).then(res => {
           if (res.data.code === 0) {
+            res.data.data.courseName.forEach((v, i) => {
+              res.data.data.courseName[i] = v.slice(0, 20) + '...'
+            })
             this.clickList = res.data.data
             this.courseClickListEchart()
           }
@@ -75,6 +84,9 @@
         //课程视频数量
         this.$axios.post(`/courseApi/service.v1.WorknetCourse/WorknetCourseVideoRank`, {location: [1, 15]}).then(res => {
           if (res.data.code === 0) {
+            res.data.data.courseName.forEach((v, i) => {
+              res.data.data.courseName[i] = v.slice(0, 20) + '...'
+            })
             this.videoList = res.data.data
             this.courseVideoListEchart()
           }
@@ -83,8 +95,8 @@
 
       //综合评分排行
       courseStarsListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_star_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_star_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '课程综合评分排行榜',
             subtext: 'worknet'
@@ -118,13 +130,13 @@
           },
           yAxis: {
             type: 'category',
-            data: this.starList.courseName.reverse()
+            data: this.starsList.courseName.reverse()
           },
           series: [
             {
               name: '综合评分',
               type: 'bar',
-              data: this.starList.number.reverse()
+              data: this.starsList.number.reverse()
             },
           ]
         }
@@ -133,8 +145,8 @@
 
       //课程点击量排行
       courseClickListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_click_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_click_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '课程点击量排行榜',
             subtext: 'worknet'
@@ -183,8 +195,8 @@
 
       //课程视频数量排行镑
       courseVideoListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('course_video_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('course_video_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '课程视频数量排行榜',
             subtext: 'worknet'
@@ -233,64 +245,85 @@
 
       //more综合评分
       handleClickStars () {
-        var length
-        if (this.starList.courseName !== undefined && this.starList.courseName !== null)
-          length = this.starList.courseName.length
-        else
+        this.loadStars = true
+        let length
+        if (this.starsList.courseName !== undefined && this.starsList.courseName !== null) {
+          length = this.starsList.courseName.length
+        } else {
           length = 0
+        }
         //课程综合评分
         this.$axios.post(`/courseApi/service.v1.WorknetCourse/WorknetCourseStarsRank`, {location: [length + 1, length + 16]}).then(res => {
           if (res.data.code === 0) {
             if (res.data.data.courseName === undefined || res.data.data.courseName == null || res.data.data.courseName.length <= 0) {
               this.$message.info('这已经是全部数据啦！')
+              this.loadStars = false
               return
             }
-            this.starList.courseName = this.starList.courseName.concat(res.data.data.courseName)
-            this.starList.number = this.starList.number.concat(res.data.data.number)
+            res.data.data.courseName.forEach((v, i) => {
+              res.data.data.courseName[i] = v.slice(0, 20) + '...'
+            })
+            this.starsList.courseName = this.starsList.courseName.reverse().concat(res.data.data.courseName)
+            this.starsList.number = this.starsList.number.reverse().concat(res.data.data.number)
             this.courseStarsListEchart()
           }
+          this.loadStars = false
         })
       },
 
       //more点击量
       handleClickClick () {
-        var length
-        if (this.clickList.courseName !== undefined && this.clickList.courseName!== null)
+        this.loadClick = true
+        let length
+        if (this.clickList.courseName !== undefined && this.clickList.courseName !== null) {
           length = this.clickList.courseName.length
-        else
+        } else {
           length = 0
+        }
         //课程点击量
         this.$axios.post(`/courseApi/service.v1.WorknetCourse/WorknetCourseClickRank`, {location: [length + 1, length + 16]}).then(res => {
           if (res.data.code === 0) {
             if (res.data.data.courseName === undefined || res.data.data.courseName == null || res.data.data.courseName.length <= 0) {
               this.$message.info('这已经是全部数据啦！')
+              this.loadClick = false
               return
             }
-            this.clickList.courseName = this.clickList.courseName.concat(res.data.data.courseName)
-            this.clickList.number = this.clickList.number.concat(res.data.data.number)
+            res.data.data.courseName.forEach((v, i) => {
+              res.data.data.courseName[i] = v.slice(0, 20) + '...'
+            })
+            this.clickList.courseName = this.clickList.courseName.reverse().concat(res.data.data.courseName)
+            this.clickList.number = this.clickList.number.reverse().concat(res.data.data.number)
             this.courseClickListEchart()
           }
+          this.loadClick = false
         })
       },
 
       //more视频数量
       handleClickVideo () {
-        var length
-        if (this.videoList.courseName !== undefined && this.videoList.courseName !== null)
+        this.loadVideo = true
+        let length
+        if (this.videoList.courseName !== undefined && this.videoList.courseName !== null) {
           length = this.videoList.courseName.length
-        else
+        } else {
           length = 0
+        }
         //课程视频数量
         this.$axios.post(`/courseApi/service.v1.WorknetCourse/WorknetCourseVideoRank`, {location: [length + 1, length + 16]}).then(res => {
           if (res.data.code === 0) {
             if (res.data.data.courseName === undefined || res.data.data.courseName == null || res.data.data.courseName.length <= 0) {
               this.$message.info('这已经是全部数据啦！')
+              this.loadVideo = false
               return
             }
-            this.videoList.courseName = this.videoList.courseName.concat(res.data.data.courseName)
-            this.videoList.number = this.videoList.number.concat(res.data.data.number)
+            res.data.data.courseName.forEach((v, i) => {
+              res.data.data.courseName[i] = v.slice(0, 20) + '...'
+            })
+            this.videoList.courseName = this.videoList.courseName.reverse().concat(res.data.data.courseName)
+            this.videoList.number = this.videoList.number.reverse().concat(res.data.data.number)
             this.courseVideoListEchart()
           }
+          this.loadVideo = false
         })
       },
     }
@@ -333,7 +366,7 @@
 
   .more_button {
     position: relative;
-    left: 50%;
+    left: 45%;
     top: 0;
     transform: translate(-100%, 0);
     font-size: 12pt;

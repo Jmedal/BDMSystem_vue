@@ -222,17 +222,16 @@
 
       //地区公司分布数量情况
       companyLocationEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_location_echart'))
-
-        var data = this.locationList
-        var max = 0
-        var maxData = data.sort(function (a, b) {
+        let myChart = this.$echarts.init(document.getElementById('company_location_echart'))
+        let data = this.locationList
+        let max = 0
+        let maxData = data.sort(function (a, b) {
           return b.value - a.value
         }).slice(0, 1)[0]
         if (maxData !== undefined && maxData !== null) {
           max = maxData.value
         }
-        var geoCoordMap = {
+        let geoCoordMap = {
           '海门': [121.15, 31.89],
           '鄂尔多斯': [109.781327, 39.608266],
           '招远': [120.38, 37.35],
@@ -424,10 +423,10 @@
           '武汉': [114.31, 30.52],
           '大庆': [125.03, 46.58]
         }
-        var convertData = function (data) {
-          var res = []
-          for (var i = 0; i < data.length; i++) {
-            var geoCoord = geoCoordMap[data[i].name]
+        let convertData = function (data) {
+          let res = []
+          for (let i = 0; i < data.length; i++) {
+            let geoCoord = geoCoordMap[data[i].name]
             if (geoCoord) {
               res.push({
                 name: data[i].name,
@@ -438,7 +437,7 @@
           return res
         }
 
-        var option = {
+        let option = {
           title: {
             text: '全国互联网公司分布地图',
             subtext: 'worknet',
@@ -447,7 +446,7 @@
           },
           tooltip: {
             formatter: function (obj) {
-              var relVal = ''
+              let relVal = ''
               relVal += obj.seriesName + '<br/>'
                 + obj.name + ' : ' + obj.value[2] + ' 家公司'
               return relVal
@@ -616,19 +615,19 @@
 
       //地区公司分布数量排名
       companyLocationListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_location_list_echart'), 'westeros')
-        var topData = this.locationList.sort(function (a, b) {
+        let myChart = this.$echarts.init(document.getElementById('company_location_list_echart'), 'westeros')
+        let topData = this.locationList.sort(function (a, b) {
           return b.value - a.value
         })
         if (topData.length > 15) {
           topData = topData.slice(0, 15)
         }
-        var name = [], num = []
-        for (var i = 0; i < topData.length; i++) {
+        let name = [], num = []
+        for (let i = 0; i < topData.length; i++) {
           name.unshift('Top' + (i + 1) + ':' + topData[i].name)
           num.unshift(topData[i].value)
         }
-        var option = {
+        let option = {
           title: {
             text: '排名Top12',
           },
@@ -670,15 +669,15 @@
 
       //公司发布招聘数量变化
       companyNewProfessionEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_new_profession_echart'), 'westeros')
-        var companyName = []
-        var seriesDate = []
+        let myChart = this.$echarts.init(document.getElementById('company_new_profession_echart'), 'westeros')
+        let companyName = []
+        let seriesDate = []
         if (this.professionChange.profession === undefined || this.professionChange.profession == null) {
           this.professionChange.profession = []
         }
-        for (var i = 0; i < this.professionChange.profession.length; i++) {
+        for (let i = 0; i < this.professionChange.profession.length; i++) {
           companyName.push(this.professionChange.profession[i].companyName)
-          var option = {
+          let option = {
             name: this.professionChange.profession[i].companyName,
             type: 'line',
             stack: this.professionChange.profession[i].companyName,
@@ -687,7 +686,7 @@
           }
           seriesDate.push(option)
         }
-        var option = {
+        let option = {
           title: {
             text: '公司月发布招聘数量变化趋势'
           },
@@ -736,16 +735,16 @@
 
       //标签删除
       handleClose (tag) {
-        var tagIndex = this.tags.indexOf(tag)
-        var courseIdIndex = this.selectValue.companyId.indexOf(this.tags[tagIndex].id)
+        let tagIndex = this.tags.indexOf(tag)
+        let courseIdIndex = this.selectValue.companyId.indexOf(this.tags[tagIndex].id)
         this.selectValue.companyId.splice(courseIdIndex, 1)
         this.tags.splice(tagIndex, 1)
       },
 
       //公司招聘数量排行
       courseProfessionListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_profession_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('company_profession_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '公司发布招聘数量Top10',
             subtext: 'worknet'
@@ -795,8 +794,8 @@
 
       //公司简历数量排行
       courseResumeListEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_resume_list_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('company_resume_list_echart'), 'westeros')
+        let option = {
           title: {
             text: '公司收到简历数量Top10',
             subtext: 'worknet'
@@ -846,8 +845,8 @@
 
       //公司简历状态比例
       courseResumeStateEchart () {
-        var myChart = this.$echarts.init(document.getElementById('company_resume_state_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('company_resume_state_echart'), 'westeros')
+        let option = {
           title: {
             text: '公司所收简历状态比例',
             subtext: 'worknet',

@@ -35,8 +35,8 @@
         },
         loginUserRules: {
           account: [
-            {required: true, message: '请输入用戶名', trigger: 'blur'},
-            {min: 4, max: 20, message: '用户名的长度在4~20个字符之间', trigger: 'blur'}
+            {required: true, message: '请输入帐号', trigger: 'blur'},
+            {min: 4, max: 20, message: '帐号的长度在4~20个字符之间', trigger: 'blur'}
           ],
           password:
             [

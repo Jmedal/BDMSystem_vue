@@ -57,7 +57,7 @@
         <el-table-column prop="id" label="角色id" width="80px"></el-table-column>
         <el-table-column prop="roleName" label="角色名称" width="200px"></el-table-column>
         <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
-        <el-table-column label="操作" width="260px">
+        <el-table-column label="操作" width="260px" fixed="right">
           <template v-slot="scope">
             <el-tooltip class="item" effect="dark"
                         :content="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
@@ -104,7 +104,7 @@
     </el-card>
 
     <el-dialog
-      :title="rightMap[menuObject.add].menuName"
+      :title="rightMap[menuObject.add] === undefined ? '禁用' : rightMap[menuObject.add].menuName"
       :visible.sync="addDialogVisible"
       width="550px"
       @close="addDialogClosed">
@@ -129,7 +129,7 @@
     </el-dialog>
 
     <el-dialog
-      :title="rightMap[menuObject.edit].menuName"
+      :title="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
       :visible.sync="editDialogVisible"
       width="550px"
       @close="editDialogClosed">
@@ -154,7 +154,7 @@
     </el-dialog>
 
     <el-dialog
-      :title="rightMap[menuObject.setRoleMenu].menuName"
+      :title="rightMap[menuObject.setRoleMenu] === undefined ? '禁用' : rightMap[menuObject.setRoleMenu].menuName"
       :visible.sync="setMenuDialogVisible"
       width="45%"
       @close="setMenuDialogClosed">
@@ -270,13 +270,6 @@
       this.getRoleList()
     }, methods: {
       init () {
-        this.grandpa = JSON.parse(Base64.decode(window.sessionStorage.getItem('grandpa')))
-        this.parent = JSON.parse(Base64.decode(window.sessionStorage.getItem('parent')))
-        let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
-        if (list === null) return
-        list.forEach(item => {
-          this.rightMap [item.id] = item
-        })
         this.$axios.post(`/bdmsMenuApi/service.v1.Menu/GetAllMenuOptions`).then(res => {
           if (res.data.code === 0) {
             this.menuOptionsData = res.data.data.menuOptions[0].children
@@ -286,7 +279,13 @@
             this.$message.error('获取权限数据失败！')
           }
         })
-
+        this.grandpa = JSON.parse(Base64.decode(window.sessionStorage.getItem('grandpa')))
+        this.parent = JSON.parse(Base64.decode(window.sessionStorage.getItem('parent')))
+        let list = JSON.parse(Base64.decode(window.sessionStorage.getItem('children')))
+        if (list === null) return
+        list.forEach(item => {
+          this.rightMap [item.id] = item
+        })
       },
       getRoleList () {
         this.loading = true

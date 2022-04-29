@@ -9,7 +9,7 @@
   export default {
     data () {
       return {
-        url:"http://127.0.0.1:9090"
+        url:"http://47.107.116.160:9090"
       }
     },
     mounted(){

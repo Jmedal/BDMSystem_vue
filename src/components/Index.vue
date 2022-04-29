@@ -20,8 +20,8 @@
           <template v-for="item in menus">
             <el-menu-item :index="item.path" :key="item.id" @click="setChildren(item.children)"
                           v-if="item.children === null">
-              <i :class="item.icon"></i>
-              <span>{{item.menuName}}</span>
+                <i :class="item.icon"></i>
+                <span>{{item.menuName}}</span>
             </el-menu-item>
             <el-submenu :index="item.path" :key="item.id" v-else>
               <template slot="title">
@@ -46,15 +46,15 @@
               <el-button type="text" class="toggle-button" :icon="fold" @click="isCollapse=!isCollapse"></el-button>
             </el-col>
             <el-col :span="5">
-              <el-row :gutter="2">
-                <el-col :span="12">
+              <el-row :gutter="5">
+                <el-col :span="11">
                   <div style="height: 5px"></div>
                 </el-col>
-                <el-col :span="7" class="user-info">
+                <el-col :span="8" class="user-info">
                   <el-dropdown trigger="hover">
                     <span class="el-dropdown-link userInfo-inner"><i class="el-icon-user"></i> {{userInfo.name}}</span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="$router.push('/').catch(error => error)">
+                      <el-dropdown-item @click.native="$router.push('/index/house').catch(error => error)">
                         <i class="el-icon-house"> 首页</i>
                       </el-dropdown-item>
                       <el-dropdown-item @click.native="showUserInfo">
@@ -113,9 +113,9 @@
                :rules="editFormRules"
                ref="editFormRef"
                label-width="80px">
-        <el-row :gutter="2">
+        <el-row :gutter="0">
           <el-col :span="11">
-            <el-form-item label="用户名" prop="account">
+            <el-form-item label="帐号" prop="account">
               <el-input v-model="editForm.account" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -125,7 +125,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="2">
+        <el-row :gutter="0">
           <el-col :span="11">
             <el-form-item label="修改密码" prop="password">
               <el-input v-model="editForm.password" show-password></el-input>
@@ -142,7 +142,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="2">
+        <el-row :gutter="0">
           <el-col :span="11">
             <p></p>
           </el-col>
@@ -159,14 +159,14 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="2">
+        <el-row :gutter="0">
           <el-col :span="22">
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="editForm.email"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="2">
+        <el-row :gutter="0">
           <el-col :span="22">
             <el-form-item label="手机号码" prop="phone">
               <el-input v-model="editForm.phone"></el-input>
@@ -223,7 +223,8 @@
             {min: 4, max: 20, message: '密码的长度在4~20个字符之间', trigger: 'blur'},
           ],
           name: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
+            {required: true, message: '请输入姓名', trigger: 'blur'},
+            {min: 2, max: 20, message: '姓名长度在2~20个字符之间', trigger: 'blur'},
           ],
           birthday: [
             {required: true, message: '请选择生日日期', trigger: 'blur'},
@@ -255,7 +256,9 @@
           }, {
             value: '女',
             label: '女'
-          }]
+          }],
+        //定时器
+        messageInterval: {},
       }
     }, created () {
       this.init()
@@ -264,7 +267,7 @@
     },
     methods: {
       init () {
-        this.userInfo = window.sessionStorage.getItem('save') === '1' ? window.sessionStorage.getItem('userInfo') : window.localStorage.getItem('userInfo')
+        this.userInfo = window.localStorage.getItem('save') === '1' ? window.localStorage.getItem('userInfo') : window.sessionStorage.getItem('userInfo')
         this.userInfo = JSON.parse(Base64.decode(this.userInfo))
         this.$axios.post(`/bdmsAccountApi/service.v1.Account/GetUserRole`, {id: this.userInfo.id}).then(res => {
           if (res.data.code === 0) {
@@ -276,7 +279,7 @@
             }
           }
         })
-        window.setInterval(() => {
+        this.messageInterval = window.setInterval(() => {
           setTimeout(this.getMessage, 0)
         }, 30000)
       },
@@ -300,6 +303,7 @@
             window.localStorage.getItem('save') === '1' ?
               window.localStorage.setItem('path', Base64.encode(JSON.stringify(path))) :
               window.sessionStorage.setItem('path', Base64.encode(JSON.stringify(path)))
+            this.pushHouse(path)
           } else {
             this.$message.warning('无可用菜单！')
           }
@@ -317,6 +321,7 @@
       },
 
       logout () {
+        window.clearInterval(this.messageInterval)
         let save = window.localStorage.getItem('save')
         save === '1' ? window.localStorage.clear() : window.sessionStorage.clear()
         window.localStorage.setItem('save', save)
@@ -345,7 +350,10 @@
 
       userInfoClose (done) {
         this.$refs.editFormRef.validate(volid => {
-          if (!volid) return
+          if (!volid) {
+            this.$refs.editFormRef.resetFields()
+            return done()
+          }
           this.editForm.birthday = Number(this.editForm.birthday / 1000)
           if (JSON.stringify(this.userInfo) !== JSON.stringify(this.editForm)) {
             this.$confirm(
@@ -364,9 +372,9 @@
                 }).then(res => {
                 if (res.data.code === 0 && res.data.data.result === 'success') {
                   this.userInfo = JSON.parse(JSON.stringify(this.editForm))
-                  window.sessionStorage.getItem('save') === '1' ?
-                    window.sessionStorage.setItem('userInfo', Base64.encode(this.userInfo)) :
-                    window.localStorage.setItem('userInfo', Base64.encode(this.userInfo))
+                  window.localStorage.getItem('save') === '1' ?
+                    window.localStorage.setItem('userInfo', Base64.encode(this.userInfo)) :
+                    window.sessionStorage.setItem('userInfo', Base64.encode(this.userInfo))
                   this.$message.success('保存成功')
                 } else {
                   this.$message.error('保存失败！')
@@ -392,7 +400,7 @@
       },
 
       messageClose () {
-        if(this.messageInfo.isRead === 1) {
+        if (this.messageInfo.isRead === 1) {
           this.$axios.post(`/bdmsMessageApi/service.v1.Message/SetMessageUserRead`, {messageId: this.messageInfo.id}).then(res => {
             if (res.data.code === 0 && res.data.data.result === 'success') {
               this.getMessage()
@@ -424,7 +432,15 @@
             this.$message.error('清空失败！')
           }
         })
-      }
+      },
+
+      pushHouse (path) {
+        //多主页
+        if(!path['/index/house']){
+          if(path['/index/rl_house'])
+            this.$router.push('/index/rl_house').catch(error => error)
+        }
+      },
     },
     computed: {
       badge () {
@@ -439,7 +455,8 @@
       asideMenu () {
         return this.isCollapse ? 'width: 235px;' : 'width: auto;'
       },
-    }, filters: {
+    },
+    filters: {
       //YYYY-mm-dd HH:MM
       timeFilter (time, fmt) {
         let date = new Date(time * 1000)

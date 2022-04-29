@@ -73,11 +73,25 @@ module.exports = {
           '^/companyApi': ''
         }
       },
+      '/imoocCourseApi': {
+        target: 'http://47.107.116.160:5201', //这里面是你要访问的IP地址
+        changeOrigin: true,     //开启代理
+        pathRewrite: {
+          '^/imoocCourseApi': ''
+        }
+      },
+      '/rlFinanceApi': {
+        target: 'http://47.107.116.160:5301', //这里面是你要访问的IP地址
+        changeOrigin: true,     //开启代理
+        pathRewrite: {
+          '^/rlFinanceApi': ''
+        }
+      },
     },
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
