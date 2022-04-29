@@ -30,7 +30,7 @@
       <!-- 用户列表区域 -->
       <el-table :data="userPage.page" v-loading="loading" border stripe>
         <el-table-column type="index" label="#" width="40px"></el-table-column>
-        <el-table-column prop="account" label="用户名"></el-table-column>
+        <el-table-column prop="account" label="帐号" width="150px"></el-table-column>
         <el-table-column prop="name" label="姓名" width="100px"></el-table-column>
         <el-table-column prop="roleId" label="角色" width="130px">
           <template v-slot="scope">
@@ -50,7 +50,7 @@
             {{scope.row.createTime | timeFilter('YYYY-mm-dd')}}
           </template>
         </el-table-column>
-        <el-table-column prop="state" label="状态" width="120px">
+        <el-table-column prop="state" label="状态" width="65px">
           <template v-slot="scope">
             <el-tooltip class="item" effect="dark"
                         :content="rightMap[menuObject.switch] === undefined ? '禁用' : rightMap[menuObject.switch].menuName"
@@ -62,7 +62,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200px">
+        <el-table-column label="操作" width="200px" fixed="right">
           <template v-slot="scope">
             <el-tooltip class="item" effect="dark"
                         :content="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
@@ -110,7 +110,7 @@
     </el-card>
 
     <el-dialog
-      :title="rightMap[menuObject.add].menuName"
+      :title="rightMap[menuObject.add] === undefined ? '禁用' : rightMap[menuObject.add].menuName"
       :visible.sync="addDialogVisible"
       width="700px"
       @close="addDialogClosed">
@@ -120,7 +120,7 @@
                label-width="80px">
         <el-row :gutter="2">
           <el-col :span="11">
-            <el-form-item label="用户名" prop="account">
+            <el-form-item label="帐号" prop="account">
               <el-input v-model="addForm.account"></el-input>
             </el-form-item>
           </el-col>
@@ -185,7 +185,7 @@
     </el-dialog>
 
     <el-dialog
-      :title="rightMap[menuObject.edit].menuName"
+      :title="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
       :visible.sync="editDialogVisible"
       width="700px"
       @close="editDialogClosed">
@@ -195,7 +195,7 @@
                label-width="80px">
         <el-row :gutter="2">
           <el-col :span="11">
-            <el-form-item label="用户名" prop="account">
+            <el-form-item label="帐号" prop="account">
               <el-input v-model="editForm.account" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -260,12 +260,12 @@
     </el-dialog>
 
     <el-dialog
-      :title="rightMap[menuObject.setRole].menuName"
+      :title="rightMap[menuObject.setRole] === undefined ? '禁用' : rightMap[menuObject.setRole].menuName"
       :visible.sync="setRoleDialogVisible"
       width="500px"
       @close="setRoleDialogClosed">
       <div>
-        <p style="text-align:left; margin-left: 26px">用户名：{{userInfo.account}} </p>
+        <p style="text-align:left; margin-left: 26px">帐号：{{userInfo.account}} </p>
         <p style="text-align:left; margin-left: 40px">姓名：{{userInfo.name}} </p>
         <p style="text-align:left; margin-top: 20px;">当前的角色： {{userInfo.roleId | roleFilter(roleMap)}}</p>
         <p style="text-align:left;">请分配角色:
@@ -298,7 +298,7 @@
           if (res.data.code === 0 && res.data.data.result === 'success') {
             callback()
           } else {
-            callback(new Error('用户名已存在'))
+            callback(new Error('帐号已存在'))
           }
         })
       }
@@ -355,8 +355,8 @@
         },
         addFormRules: {
           account: [
-            {required: true, message: '请输入用户名', trigger: 'blur'},
-            {min: 4, max: 20, message: '用户名的长度在4~20个字符之间', trigger: 'blur'},
+            {required: true, message: '请输入帐号', trigger: 'blur'},
+            {min: 4, max: 20, message: '帐号的长度在4~20个字符之间', trigger: 'blur'},
             {validator: checkAccount, trigger: 'blur'},
           ],
           password: [
@@ -364,7 +364,8 @@
             {min: 4, max: 20, message: '密码的长度在4~20个字符之间', trigger: 'blur'},
           ],
           name: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
+            {required: true, message: '请输入姓名', trigger: 'blur'},
+            {min: 2, max: 20, message: '姓名的长度在2~20个字符之间', trigger: 'blur'},
           ],
           birthday: [
             {required: true, message: '请选择生日日期', trigger: 'blur'},
@@ -390,7 +391,8 @@
             {min: 4, max: 20, message: '密码的长度在4~20个字符之间', trigger: 'blur'},
           ],
           name: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
+            {required: true, message: '请输入姓名', trigger: 'blur'},
+            {min: 2, max: 20, message: '姓名的长度在2~20个字符之间', trigger: 'blur'},
           ],
           birthday: [
             {required: true, message: '请选择生日日期', trigger: 'blur'},
@@ -425,6 +427,7 @@
       }
     }, created () {
       this.init()
+      this.getUserList()
     },
     methods: {
       init () {
@@ -435,7 +438,6 @@
               this.roleMap [item.value] = item.label
             })
             this.roleMap [0] = '待分配'
-            this.getUserList()
           }
         })
         this.grandpa = JSON.parse(Base64.decode(window.sessionStorage.getItem('grandpa')))

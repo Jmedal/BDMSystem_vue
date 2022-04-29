@@ -116,12 +116,12 @@
         if (this.professionChoice.professionName === undefined || this.professionChoice.professionName == null) {
           return
         }
-        var data = []
+        let data = []
         for (let i = 1; i < this.professionChoice.professionName.length; i++) {
           data.push({value: this.professionChoice.number[i], name: this.professionChoice.professionName[i]})
         }
-        var myChart = this.$echarts.init(document.getElementById('profession_choice_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('profession_choice_echart'), 'westeros')
+        let option = {
           title: {
             text: '用户选择职业意向比例',
             subtext: 'worknet',
@@ -169,14 +169,14 @@
         if (this.professionSalary.professionName === undefined || this.professionSalary.professionName == null) {
           return
         }
-        var bar = []
-        for (var i = 0; i < this.professionSalary.professionName.length; i++) {
+        let bar = []
+        for (let i = 0; i < this.professionSalary.professionName.length; i++) {
           bar.push({type: 'bar'})
         }
         this.professionSalary.professionName.unshift('product')
         this.professionSalary.salary.unshift('')
-        var myChart = this.$echarts.init(document.getElementById('profession_salary_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('profession_salary_echart'), 'westeros')
+        let option = {
           title: {
             text: '职业薪资情况',
             top: 'bottom',
@@ -218,12 +218,12 @@
         if (this.professionTypeChoice.professionName === undefined || this.professionTypeChoice.professionName == null) {
           return
         }
-        var data = []
+        let data = []
         for (let i = 1; i < this.professionTypeChoice.professionName.length; i++) {
           data.push({value: this.professionTypeChoice.number[i], name: this.professionTypeChoice.professionName[i]})
         }
-        var myChart = this.$echarts.init(document.getElementById('profession_type_choice_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('profession_type_choice_echart'), 'westeros')
+        let option = {
           title: {
             text: '职业大类拥有职业数量比例',
             subtext: 'worknet',
@@ -271,15 +271,15 @@
         if (this.professionTypeSalary.professionName === undefined || this.professionTypeSalary.professionName == null) {
           return
         }
-        var bar = []
-        for (var i = 0; i < this.professionTypeSalary.professionName.length; i++) {
+        let bar = []
+        for (let i = 0; i < this.professionTypeSalary.professionName.length; i++) {
           bar.push({type: 'bar'})
         }
         this.professionTypeSalary.professionName.unshift('product')
         this.professionTypeSalary.salary.unshift('')
 
-        var myChart = this.$echarts.init(document.getElementById('profession_type_salary_echart'), 'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('profession_type_salary_echart'), 'westeros')
+        let option = {
           title: {
             text: '职业大类平均薪资情况',
             top: 'bottom',

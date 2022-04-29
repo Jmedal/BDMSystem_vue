@@ -59,7 +59,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="250px">
+        <el-table-column label="操作" width="250px" fixed="right">
           <template v-slot="scope">
             <el-tooltip class="item" effect="dark"
                         :content="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
@@ -101,7 +101,7 @@
     </el-card>
 
     <el-dialog
-      :title="rightMap[menuObject.add].menuName"
+      :title="rightMap[menuObject.add] === undefined ? '禁用' : rightMap[menuObject.add].menuName"
       :visible.sync="addDialogVisible"
       width="1000px"
       @close="addDialogClosed">
@@ -136,7 +136,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="2">
-          <el-col :span="6">
+          <el-col :span="7">
             <el-form-item label="发布时间" prop="releaseTime">
               <el-date-picker
                 v-model="addForm.releaseTime"
@@ -176,7 +176,7 @@
     </el-dialog>
 
     <el-dialog
-      :title="rightMap[menuObject.edit].menuName"
+      :title="rightMap[menuObject.edit] === undefined ? '禁用' : rightMap[menuObject.edit].menuName"
       :visible.sync="editDialogVisible"
       width="1000px"
       @close="editDialogClosed">
@@ -211,7 +211,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="2">
-          <el-col :span="6">
+          <el-col :span="7">
             <el-form-item label="发布时间" prop="releaseTime">
               <el-date-picker
                 v-model="editForm.releaseTime"
@@ -274,15 +274,15 @@
         userList: [],
         addFormRules: {
           title: [
-            {required: true, message: '请输入标题', trigger: 'blur'},
+            {required: true, message: '请输入通知标题', trigger: 'blur'},
             {min: 2, max: 50, message: '通知标题的长度在2~50个字符之间', trigger: 'blur'},
           ],
           icon: [
             {required: true, message: '请选择图标', trigger: 'blur'},
           ],
           content: [
-            {required: true, message: '请输入内容', trigger: 'blur'},
-            {min: 4, max: 15000, message: '通知内容的过长', trigger: 'blur'},
+            {required: true, message: '请输入通知内容', trigger: 'blur'},
+            {min: 4, max: 15000, message: '通知内容过长', trigger: 'blur'},
           ],
           releaseTime: [
             {required: true, message: '请选择发布时间（可预约时间）', trigger: 'blur'},
@@ -293,14 +293,14 @@
         editForm: {},
         editFormRules: {
           title: [
-            {required: true, message: '请输入标题', trigger: 'blur'},
+            {required: true, message: '请输入通知标题', trigger: 'blur'},
             {min: 2, max: 50, message: '通知标题的长度在2~50个字符之间', trigger: 'blur'},
           ],
           icon: [
             {required: true, message: '请选择图标', trigger: 'blur'},
           ],
           content: [
-            {required: true, message: '请输入内容', trigger: 'blur'},
+            {required: true, message: '请输入通知内容', trigger: 'blur'},
             {min: 4, max: 15000, message: '通知内容的长度过长', trigger: 'blur'},
           ],
           releaseTime: [

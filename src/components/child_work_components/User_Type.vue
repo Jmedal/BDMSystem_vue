@@ -121,8 +121,8 @@
       },
 
       userTypeEchart () {
-        var myChart = this.$echarts.init(document.getElementById('user_type_echart'),'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('user_type_echart'),'westeros')
+        let option = {
           title: {
             text: '各类用户年增长量曲线图',
             subtext: 'worknet',
@@ -166,9 +166,9 @@
           ]
         }
         myChart.on('updateAxisPointer', function (event) {
-          var xAxisInfo = event.axesInfo[0]
+          let xAxisInfo = event.axesInfo[0]
           if (xAxisInfo) {
-            var dimension = xAxisInfo.value + 1
+            let dimension = xAxisInfo.value + 1
             myChart.setOption({
               series: {
                 id: 'pie',
@@ -187,8 +187,8 @@
       },
 
       userSexEchart () {
-        var myChart = this.$echarts.init(document.getElementById('user_sex_echart'),'westeros')
-        var option = {
+        let myChart = this.$echarts.init(document.getElementById('user_sex_echart'),'westeros')
+        let option = {
           title: {
             text: '普通用户男女比例',
             subtext: 'worknet',
@@ -234,7 +234,7 @@
       },
 
       userActivateEchart () {
-        var myChart = this.$echarts.init(document.getElementById('user_activate_echart'),'westeros')
+        let myChart = this.$echarts.init(document.getElementById('user_activate_echart'),'westeros')
         this.option3 = {
           title: {
             text: '用户激活比例',
@@ -298,7 +298,7 @@
   }
 
   .pie_box {
-    height: 100%;
+    height: 835px;
     width: 100%;
     border-radius: 3px;
     position: relative;

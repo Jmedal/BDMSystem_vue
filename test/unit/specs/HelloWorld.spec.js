@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import HelloWorld from '@/components/HelloWorld'
 
-// describe('House.vue', () => {
+// describe('RL_House.vue', () => {
 //   it('should render correct contents', () => {
 //     const Constructor = Vue.extend(HelloWorld)
 //     const vm = new Constructor().$mount()
